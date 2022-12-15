@@ -1,4 +1,4 @@
-import {Component, h, createRef} from 'preact';
+import {Component, createRef} from 'preact';
 
 
 type Properties = {

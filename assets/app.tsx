@@ -1,10 +1,12 @@
 import './styles/app.css';
 
 import Router from 'preact-router';
-import {Component, h, render} from 'preact';
-import Header from "./components/Header";
-import Home from "./controllers/Home";
-import Series from "./controllers/Series";
+import {Component, render} from 'preact';
+import {Provider} from 'unistore/preact';
+import Header from './components/Header';
+import Home from './controllers/Home';
+import Series from './controllers/Series';
+import {store} from './store'
 
 
 type Properties = {}
@@ -13,8 +15,6 @@ type State = {}
 
 class App extends Component<Properties, State> {
     render() {
-        console.log();
-
         return (
             <Component>
                 <Header />
@@ -28,4 +28,9 @@ class App extends Component<Properties, State> {
     }
 }
 
-render(<App />, document.getElementById('app'));
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('app')
+);

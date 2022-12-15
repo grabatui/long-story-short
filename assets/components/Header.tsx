@@ -1,12 +1,20 @@
 import {Match} from 'preact-router/match';
-import {Component, h} from 'preact';
-import XMarkIcon from "./Icon/XMarkIcon";
-import Bars3Icon from "./Icon/Bars3Icon";
-import {classNames} from "../helpers";
-import OutsideClickWrapper from "./Wrapper/OutsideClickWrapper";
+import {Component} from 'preact';
+import {connect} from 'unistore/preact';
+import XMarkIcon from './Icon/XMarkIcon';
+import Bars3Icon from './Icon/Bars3Icon';
+import ProfileIcon from './Icon/ProfileIcon';
+import {classNames} from '../helpers';
+import OutsideClickWrapper from './Wrapper/OutsideClickWrapper';
+import {userActions, userActionsType} from '../actions';
+import {UserType} from "../types";
+import Loader from "./Loader";
 
 
-type Properties = {};
+type Properties = userActionsType & {
+    user: UserType|null,
+};
+
 type State = {
     isMainMenuOpen: boolean,
     isProfileMenuOpen: boolean
@@ -35,7 +43,7 @@ const LINKS: LinkItem[] = [
 ];
 
 
-export default class Header extends Component<Properties, State> {
+class Header extends Component<Properties, State> {
     constructor(properties: Properties) {
         super(properties);
 
@@ -43,6 +51,28 @@ export default class Header extends Component<Properties, State> {
             isMainMenuOpen: false,
             isProfileMenuOpen: false,
         };
+    }
+
+    componentDidMount() {
+        this.props.loadUserAction();
+    }
+
+    private renderProfileMenu() {
+        if (!this.props.user) {
+            return <Loader />
+        }
+
+        if (this.props.user.type == 'unauthorized') {
+            return <Component>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700">Register</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700">Login</a>
+            </Component>
+        }
+
+        return <Component>
+            <a href="#" className="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
+            <a href="#" className="block px-4 py-2 text-sm text-gray-700">Sign out</a>
+        </Component>
     }
 
     render() {
@@ -109,11 +139,7 @@ export default class Header extends Component<Properties, State> {
                                         >
                                             <span className="sr-only">Open user menu</span>
 
-                                            <img
-                                                className="h-8 w-8 rounded-full"
-                                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                                alt=""
-                                            />
+                                            <ProfileIcon />
                                         </button>
                                     </div>
 
@@ -123,9 +149,7 @@ export default class Header extends Component<Properties, State> {
                                             this.state.isProfileMenuOpen ? null : 'hidden'
                                         ])}
                                     >
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700">Settings</a>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700">Sign out</a>
+                                        {this.renderProfileMenu()}
                                     </div>
                                 </OutsideClickWrapper>
                             </div>
@@ -153,3 +177,5 @@ export default class Header extends Component<Properties, State> {
         );
     }
 }
+
+export default connect(['user'], userActions)(Header);
