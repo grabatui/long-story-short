@@ -6,32 +6,33 @@ import Bars3Icon from './Icon/Bars3Icon';
 import ProfileIcon from './Icon/ProfileIcon';
 import {classNames} from '../helpers';
 import OutsideClickWrapper from './Wrapper/OutsideClickWrapper';
-import {userActions, userActionsType} from '../actions';
-import {UserType} from "../types";
-import Loader from "./Loader";
+import {userActions, modalActions, modalType} from '../actions';
+import {StoreStateInterface} from "../types";
+import Loader from './Loader';
+import {store} from '../store';
 
 
-type Properties = userActionsType & {
-    user: UserType|null,
-};
-
-type State = {
+interface Properties extends StoreStateInterface {
+    showModal: (type: modalType) => void;
+    loadUserAction: () => void;
+}
+interface State {
     isMainMenuOpen: boolean,
     isProfileMenuOpen: boolean
-};
+}
 
-type LinkItem = {
+type LinkItemType = {
     url: string,
     text: string
 };
-type MatchItem = {
+type MatchItemType = {
     matches: boolean,
     path: string,
     url: string
 };
 
 
-const LINKS: LinkItem[] = [
+const LINKS: LinkItemType[] = [
     {
         url: '/',
         text: 'Главная',
@@ -57,6 +58,16 @@ class Header extends Component<Properties, State> {
         this.props.loadUserAction();
     }
 
+    private showLoginModal() {
+        this.props.showModal('login');
+        this.setState({isProfileMenuOpen: false});
+    }
+
+    private showRegistrationModal() {
+        this.props.showModal('registration');
+        this.setState({isProfileMenuOpen: false});
+    }
+
     private renderProfileMenu() {
         if (!this.props.user) {
             return <Loader />
@@ -64,8 +75,8 @@ class Header extends Component<Properties, State> {
 
         if (this.props.user.type == 'unauthorized') {
             return <Component>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700">Register</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700">Login</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={this.showLoginModal.bind(this)}>Login</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={this.showRegistrationModal.bind(this)}>Register</a>
             </Component>
         }
 
@@ -112,8 +123,8 @@ class Header extends Component<Properties, State> {
 
                             <div className="hidden sm:ml-6 sm:block">
                                 <div className="flex space-x-4">
-                                    {LINKS.map((link: LinkItem) => (
-                                        <Match path={link.url}>{(match: MatchItem) => (
+                                    {LINKS.map((link: LinkItemType) => (
+                                        <Match path={link.url}>{(match: MatchItemType) => (
                                             <a
                                                 className={
                                                     match.matches
@@ -159,8 +170,8 @@ class Header extends Component<Properties, State> {
 
                 <div className={classNames(['sm:hidden', !this.state.isMainMenuOpen ? 'hidden' : null])} id="mobile-menu">
                     <div className="space-y-1 px-2 pt-2 pb-3">
-                        {LINKS.map((link: LinkItem) => (
-                            <Match path={link.url}>{(match: MatchItem) => (
+                        {LINKS.map((link: LinkItemType) => (
+                            <Match path={link.url}>{(match: MatchItemType) => (
                                 <a
                                     className={
                                         match.matches
@@ -178,4 +189,4 @@ class Header extends Component<Properties, State> {
     }
 }
 
-export default connect(['user'], userActions)(Header);
+export default connect(['user'], {...userActions(store), ...modalActions(store)})(Header);

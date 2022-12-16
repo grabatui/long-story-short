@@ -1,9 +1,11 @@
 import createStore from 'unistore';
 import devtools from 'unistore/devtools'
+import {StoreStateInterface} from "./types";
 
 
-const initialState: any = {
+const initialState: StoreStateInterface = {
     user: null,
+    shownModals: []
 };
 
 

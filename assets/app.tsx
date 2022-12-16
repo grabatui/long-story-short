@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Home from './controllers/Home';
 import Series from './controllers/Series';
 import {store} from './store'
+import LoginModal from './components/Modal/LoginModal';
 
 
 type Properties = {}
@@ -23,6 +24,8 @@ class App extends Component<Properties, State> {
                     <Home path="/" />
                     <Series path="/series" />
                 </Router>
+
+                <LoginModal />
             </Component>
         );
     }
