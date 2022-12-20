@@ -6,15 +6,16 @@ import Bars3Icon from './Icon/Bars3Icon';
 import ProfileIcon from './Icon/ProfileIcon';
 import {classNames} from '../helpers';
 import OutsideClickWrapper from './Wrapper/OutsideClickWrapper';
-import {userActions, modalActions, modalType} from '../actions';
 import {StoreStateInterface} from "../types";
 import Loader from './Loader';
 import {store} from '../store';
+import {userActions} from "../actions/userActions";
+import {modalActions, modalType} from "../actions/modalActions";
 
 
 interface Properties extends StoreStateInterface {
-    showModal: (type: modalType) => void;
-    loadUserAction: () => void;
+    showModal(type: modalType): void;
+    loadUserAction(): void;
 }
 interface State {
     isMainMenuOpen: boolean,
@@ -58,12 +59,16 @@ class Header extends Component<Properties, State> {
         this.props.loadUserAction();
     }
 
-    private showLoginModal() {
+    private showLoginModal(event: Event) {
+        event.preventDefault();
+
         this.props.showModal('login');
         this.setState({isProfileMenuOpen: false});
     }
 
-    private showRegistrationModal() {
+    private showRegistrationModal(event: Event) {
+        event.preventDefault();
+
         this.props.showModal('registration');
         this.setState({isProfileMenuOpen: false});
     }
@@ -75,8 +80,8 @@ class Header extends Component<Properties, State> {
 
         if (this.props.user.type == 'unauthorized') {
             return <Component>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={this.showLoginModal.bind(this)}>Login</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={this.showRegistrationModal.bind(this)}>Register</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={(event) => this.showLoginModal(event)}>Login</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={(event) => this.showRegistrationModal(event)}>Register</a>
             </Component>
         }
 
@@ -99,7 +104,7 @@ class Header extends Component<Properties, State> {
                                 aria-expanded="false"
                                 onClick={() => this.setState({isMainMenuOpen: !this.state.isMainMenuOpen})}
                             >
-                                <span className="sr-only">Open main menu</span>
+                                <span className="sr-only">Открыть меню</span>
 
                                 {this.state.isMainMenuOpen ? <XMarkIcon /> : <Bars3Icon />}
                             </button>
@@ -148,7 +153,7 @@ class Header extends Component<Properties, State> {
                                             className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                                             onClick={() => this.setState({isProfileMenuOpen: !this.state.isProfileMenuOpen})}
                                         >
-                                            <span className="sr-only">Open user menu</span>
+                                            <span className="sr-only">Открыть меню</span>
 
                                             <ProfileIcon />
                                         </button>

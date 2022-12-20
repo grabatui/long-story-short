@@ -2,7 +2,7 @@
 
 namespace App\Controller\v1;
 
-use App\Entity\User;
+use App\Core\Persistence\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 

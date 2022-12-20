@@ -6,5 +6,4 @@ enum UserTypeEnum
 {
     case unauthorized;
     case authorized;
-    case admin;
 }

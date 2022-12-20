@@ -8,6 +8,7 @@ import Home from './controllers/Home';
 import Series from './controllers/Series';
 import {store} from './store'
 import LoginModal from './components/Modal/LoginModal';
+import RegistrationModal from "./components/Modal/RegistrationModal";
 
 
 type Properties = {}
@@ -26,6 +27,7 @@ class App extends Component<Properties, State> {
                 </Router>
 
                 <LoginModal />
+                <RegistrationModal />
             </Component>
         );
     }

@@ -26,7 +26,7 @@ class GetInitController extends AbstractController
 
         return $this->json([
             'id' => $user->getId(),
-            'type' => $user->resolveType()->name,
+            'type' => UserTypeEnum::authorized->name,
             'email' => $user->getEmail(),
             'allows' => [],
         ]);

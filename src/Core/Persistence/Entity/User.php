@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Core\Persistence\Entity;
 
-use App\Entity\Enum\UserTypeEnum;
-use App\Repository\UserRepository;
+use App\Core\Persistence\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,6 +19,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 180)]
+    private ?string $name = null;
+
     #[ORM\Column]
     private array $roles = [];
 
@@ -34,11 +36,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function resolveType(): UserTypeEnum
-    {
-        return UserTypeEnum::authorized; // TODO: Admin
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -49,6 +46,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
     }
 
     /**

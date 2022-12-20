@@ -1,25 +1,13 @@
 import {Store} from "unistore";
-import {StoreStateInterface} from "./types";
+import {StoreStateInterface} from "../types";
 
 
-export type userActionsType = {
-    loadUserAction(): void;
-};
-
-export type modalType = 'login'|'registration';
-export type modalActionsType = {
+export type modalType = 'login' | 'registration';
+type modalActionsType = {
     showModal(state: StoreStateInterface, type: modalType): void;
     closeModal(state: StoreStateInterface, type: modalType): void;
+    switchModals(state: StoreStateInterface, oldType: modalType, newType: modalType): void;
 };
-
-
-export const userActions = (store: Store<StoreStateInterface>): userActionsType => ({
-    loadUserAction(): void {
-        fetch('/api/v1/user/init')
-            .then((result) => result.json())
-            .then((result) => store.setState({user: result}));
-    }
-});
 
 export const modalActions = (store: Store<StoreStateInterface>): modalActionsType => ({
     showModal(state: StoreStateInterface, type: modalType): void {
@@ -32,6 +20,16 @@ export const modalActions = (store: Store<StoreStateInterface>): modalActionsTyp
             shownModals: state.shownModals.filter(
                 (shownType) => shownType !== type
             )
-        })
+        });
+    },
+    switchModals(state: StoreStateInterface, oldType: modalType, newType: modalType) {
+        if (oldType === newType) {
+            return;
+        }
+
+        // @ts-ignore
+        this.closeModal(oldType);
+        // @ts-ignore
+        this.showModal(newType);
     }
 });
