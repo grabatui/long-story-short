@@ -8,7 +8,7 @@ import Home from './controllers/Home';
 import Series from './controllers/Series';
 import {store} from './store'
 import LoginModal from './components/Modal/LoginModal';
-import RegistrationModal from "./components/Modal/RegistrationModal";
+import RegistrationModal from './components/Modal/RegistrationModal';
 
 
 type Properties = {}

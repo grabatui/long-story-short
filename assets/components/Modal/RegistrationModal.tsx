@@ -3,13 +3,11 @@ import {connect} from 'unistore/preact';
 import ModalWrapper from './ModalWrapper';
 import {StoreStateInterface} from '../../types';
 import {modalActions, modalType} from '../../actions/modalActions';
-import {authorizationActions} from '../../actions/authorizationActions';
-import {store} from '../../store';
+import {register} from '../../repository/user';
 
 
 interface Properties extends StoreStateInterface {
     switchModals(oldType: modalType, newType: modalType): void;
-    register(email: string, name: string, password: string, password_repeat: string): Promise<any>;
 }
 interface State {
     email: string|null,
@@ -50,18 +48,24 @@ class RegistrationModal extends Component<Properties, State> {
         this.setState(changeData);
     }
 
-    private onSubmit(event: Event) {
+    private async onSubmit(event: Event) {
         event.preventDefault();
 
-        this.props.register(this.state.email, this.state.name, this.state.password, this.state.password_repeat)
-            .then();
+        const result = await register(
+            this.state.email,
+            this.state.name,
+            this.state.password,
+            this.state.password_repeat
+        );
+
+        console.log(result); // TODO: Process errors
     }
 
     render() {
         return (
             // @ts-ignore
             <ModalWrapper type={'registration'} title={'Регистрация'}>
-                <form className="space-y-6" action="#" onSubmit={(event) => this.onSubmit(event)}>
+                <form className="space-y-6" action="#" onSubmit={async (event) => await this.onSubmit(event)}>
                     <div>
                         <label
                             htmlFor="registration_email"
@@ -148,4 +152,4 @@ class RegistrationModal extends Component<Properties, State> {
     }
 }
 
-export default connect([], {...modalActions(store), ...authorizationActions(store)})(RegistrationModal);
+export default connect([], modalActions)(RegistrationModal);
