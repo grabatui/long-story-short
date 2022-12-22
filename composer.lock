@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8805067bee3e6cfc38061862d90fb5de",
+    "content-hash": "2df480b960c8ffa2908c3db8ac8e505a",
     "packages": [
         {
             "name": "digitalrevolution/symfony-request-validation",

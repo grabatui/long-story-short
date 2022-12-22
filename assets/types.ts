@@ -4,11 +4,13 @@ export interface UserInterface {
 }
 
 export interface StoreStateInterface {
+    csrf: string,
+
     user: UserInterface|null,
     shownModals: string[]
 }
 
-interface ResponseResultError {
+export interface ResponseResultError {
     path: string,
     code: string,
     message: string

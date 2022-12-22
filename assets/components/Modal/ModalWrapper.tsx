@@ -1,7 +1,7 @@
 import {Component, createRef} from 'preact';
-import {connect} from "unistore/preact";
-import {StoreStateInterface} from "../../types";
-import {modalActions, modalType} from "../../actions/modalActions";
+import {connect} from 'unistore/preact';
+import {StoreStateInterface} from '../../types';
+import {modalActions, modalType} from '../../actions/modalActions';
 
 interface Properties extends StoreStateInterface {
     type: modalType,

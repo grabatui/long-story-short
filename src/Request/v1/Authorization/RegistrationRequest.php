@@ -7,6 +7,7 @@ use App\Request\AbstractRequest;
 use DigitalRevolution\SymfonyRequestValidation\Constraint\RequestConstraintFactory;
 use DigitalRevolution\SymfonyRequestValidation\ValidationRules;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -17,15 +18,22 @@ class RegistrationRequest extends AbstractRequest
         RequestStack $requestStack,
         ValidatorInterface $validator,
         RequestConstraintFactory $constraintFactory,
+        CsrfTokenManagerInterface $csrfTokenManager,
         private readonly IsEmailAlreadyExistsInterface $isEmailAlreadyExists
     ) {
-        parent::__construct($requestStack, $validator, $constraintFactory);
+        parent::__construct($requestStack, $validator, $constraintFactory, $csrfTokenManager);
     }
 
     protected function getValidationRules(): ?ValidationRules
     {
         return new ValidationRules([
             'request' => [
+                'csrf' => [
+                    'required|string',
+                    new Callback(
+                        $this->checkCsrfToken(...)
+                    ),
+                ],
                 'email' => [
                     'required|email',
                     new Callback(

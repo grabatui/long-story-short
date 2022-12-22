@@ -50,7 +50,9 @@ class ExceptionEventListener
         if ($exception instanceof ConstraintViolationsException) {
             foreach ($exception->getConstraintViolationList() as $constraintViolation) {
                 $result['errors'][] = [
-                    'path' => $constraintViolation->getPropertyPath(),
+                    'path' => $this->clearErrorPath(
+                        $constraintViolation->getPropertyPath()
+                    ),
                     'code' => $constraintViolation->getCode(),
                     'message' => $constraintViolation->getMessage(),
                 ];
@@ -58,5 +60,17 @@ class ExceptionEventListener
         }
 
         return $result;
+    }
+
+    private function clearErrorPath(string $rawPath): string
+    {
+        return trim(
+            str_replace(
+                ['[request]', ']['],
+                ['', '.'],
+                $rawPath
+            ),
+            '[]'
+        );
     }
 }

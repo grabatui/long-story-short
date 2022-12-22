@@ -4,6 +4,8 @@ import ModalWrapper from './ModalWrapper';
 import {StoreStateInterface} from '../../types';
 import {modalActions, modalType} from '../../actions/modalActions';
 import {register} from '../../repository/user';
+import FormError from '../Form/FormError';
+import {classNames} from '../../helpers';
 
 
 interface Properties extends StoreStateInterface {
@@ -14,6 +16,8 @@ interface State {
     name: string|null,
     password: string|null,
     password_repeat: string|null,
+
+    errors: any
 }
 
 
@@ -26,6 +30,8 @@ class RegistrationModal extends Component<Properties, State> {
             name: null,
             password: null,
             password_repeat: null,
+
+            errors: null,
         };
     }
 
@@ -52,13 +58,21 @@ class RegistrationModal extends Component<Properties, State> {
         event.preventDefault();
 
         const result = await register(
+            this.props.csrf,
             this.state.email,
             this.state.name,
             this.state.password,
             this.state.password_repeat
         );
 
-        console.log(result); // TODO: Process errors
+        if (result.errors) {
+            this.setState({
+                errors: result.errors.reduce(
+                    (object, error) => ({...object, [error.path]: error.message}),
+                    {}
+                ),
+            });
+        }
     }
 
     render() {
@@ -78,10 +92,15 @@ class RegistrationModal extends Component<Properties, State> {
                             value={this.state.email}
                             onInput={(event: Event) => this.onInputChanged(event)}
                             id="registration_email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            className={classNames([
+                                'bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white',
+                                this.state.errors && this.state.errors.email ? 'border-red-500' : 'border-gray-300'
+                            ])}
                             placeholder="john@doe.com"
                             required
                         />
+
+                        {this.state.errors && <FormError error={this.state.errors.email} />}
                     </div>
 
                     <div>
@@ -96,10 +115,15 @@ class RegistrationModal extends Component<Properties, State> {
                             value={this.state.name}
                             onInput={(event: Event) => this.onInputChanged(event)}
                             id="registration_name"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            className={classNames([
+                                'bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white',
+                                this.state.errors && this.state.errors.name ? 'border-red-500' : 'border-gray-300'
+                            ])}
                             placeholder="John Doe"
                             required
                         />
+
+                        {this.state.errors && <FormError error={this.state.errors.name} />}
                     </div>
 
                     <div>
@@ -115,9 +139,14 @@ class RegistrationModal extends Component<Properties, State> {
                             onInput={(event: Event) => this.onInputChanged(event)}
                             id="registration_password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            className={classNames([
+                                'bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white',
+                                this.state.errors && this.state.errors.password ? 'border-red-500' : 'border-gray-300'
+                            ])}
                             required
                         />
+
+                        {this.state.errors && <FormError error={this.state.errors.password} />}
                     </div>
 
                     <div>
@@ -133,9 +162,14 @@ class RegistrationModal extends Component<Properties, State> {
                             onInput={(event: Event) => this.onInputChanged(event)}
                             id="registration_password_repeat"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            className={classNames([
+                                'bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white',
+                                this.state.errors && this.state.errors.password_repeat ? 'border-red-500' : 'border-gray-300'
+                            ])}
                             required
                         />
+
+                        {this.state.errors && <FormError error={this.state.errors.password_repeat} />}
                     </div>
 
                     <button
@@ -152,4 +186,4 @@ class RegistrationModal extends Component<Properties, State> {
     }
 }
 
-export default connect([], modalActions)(RegistrationModal);
+export default connect(['csrf'], modalActions)(RegistrationModal);

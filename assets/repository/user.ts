@@ -2,6 +2,7 @@ import {ResponseResult} from "../types";
 
 
 export const register = async (
+    csrf: string,
     email: string,
     name: string,
     password: string,
@@ -13,7 +14,7 @@ export const register = async (
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email, name, password, password_repeat}),
+        body: JSON.stringify({csrf, email, name, password, password_repeat}),
         mode: 'cors'
     })
         .then((response) => response.json());
