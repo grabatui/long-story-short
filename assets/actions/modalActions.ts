@@ -2,7 +2,7 @@ import {Store} from "unistore";
 import {StoreStateInterface} from "../types";
 
 
-export type modalType = 'login' | 'registration';
+export type modalType = 'login'|'registration'|'success';
 type modalActionsType = {
     showModal(state: StoreStateInterface, type: modalType): void;
     closeModal(state: StoreStateInterface, type: modalType): void;

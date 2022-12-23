@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Entity\Enum\ResponseTypeEnum;
 use App\Exception\Request\ConstraintViolationsException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +44,7 @@ class ExceptionEventListener
     {
         $result = [
             'message' => $exception->getMessage(),
-            'code' => $exception->getCode(),
+            'type' => ResponseTypeEnum::error->name,
             'errors' => [],
         ];
 

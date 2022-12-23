@@ -3,6 +3,7 @@
 namespace App\Controller\v1;
 
 use App\Core\Persistence\Entity\User;
+use App\Entity\Enum\ResponseTypeEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,5 +24,14 @@ abstract class AbstractController extends BaseAbstractController
             ),
             $status
         );
+    }
+
+    protected function success(
+        array $data = []
+    ): Response {
+        return $this->json([
+            'data' => $data,
+            'type' => ResponseTypeEnum::success->name,
+        ]);
     }
 }

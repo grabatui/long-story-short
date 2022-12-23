@@ -30,6 +30,6 @@ class RegistrationController extends AbstractController
             )
         );
 
-        return $this->json([]);
+        return $this->success();
     }
 }

@@ -1,4 +1,4 @@
-import {ResponseResult} from "../types";
+import {DefaultResponseResult} from "../types";
 
 
 export const register = async (
@@ -7,7 +7,7 @@ export const register = async (
     name: string,
     password: string,
     password_repeat: string
-): Promise<ResponseResult> => {
+): Promise<DefaultResponseResult> => {
     return await fetch('/api/v1/authorization/register', {
         method: 'POST',
         headers: {

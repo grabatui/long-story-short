@@ -6,6 +6,7 @@ import {modalActions, modalType} from '../../actions/modalActions';
 import {register} from '../../repository/user';
 import FormError from '../Form/FormError';
 import {classNames} from '../../helpers';
+import DisabledButton from '../Form/DisabledButton';
 
 
 interface Properties extends StoreStateInterface {
@@ -17,7 +18,9 @@ interface State {
     password: string|null,
     password_repeat: string|null,
 
-    errors: any
+    errors: any,
+    isFormInProcess: boolean,
+    modalType: 'registration'|'success'
 }
 
 
@@ -32,13 +35,17 @@ class RegistrationModal extends Component<Properties, State> {
             password_repeat: null,
 
             errors: null,
+            isFormInProcess: false,
+            modalType: 'registration'
         };
     }
 
     private openLoginModal(event: Event) {
         event.preventDefault();
 
-        this.props.switchModals('registration', 'login');
+        this.props.switchModals(this.state.modalType, 'login');
+
+        this.setState({modalType: 'registration'})
     }
 
     private onInputChanged(event: Event) {
@@ -54,8 +61,21 @@ class RegistrationModal extends Component<Properties, State> {
         this.setState(changeData);
     }
 
+    private resetForm() {
+        this.setState({
+            email: null,
+            name: null,
+            password: null,
+            password_repeat: null,
+
+            errors: [],
+        });
+    }
+
     private async onSubmit(event: Event) {
         event.preventDefault();
+
+        this.setState({isFormInProcess: true});
 
         const result = await register(
             this.props.csrf,
@@ -65,6 +85,8 @@ class RegistrationModal extends Component<Properties, State> {
             this.state.password_repeat
         );
 
+        this.setState({isFormInProcess: false});
+
         if (result.errors) {
             this.setState({
                 errors: result.errors.reduce(
@@ -72,10 +94,27 @@ class RegistrationModal extends Component<Properties, State> {
                     {}
                 ),
             });
+        } else {
+            this.resetForm();
+
+            this.props.switchModals('registration', 'success');
+
+            this.setState({modalType: 'success'});
         }
     }
 
     render() {
+        if (this.state.modalType === 'success') {
+            return (
+                // @ts-ignore
+                <ModalWrapper type={'success'} title={'Вы успешно зарегистрированы!'} onClose={(): void => this.setState({modalType: 'registration'})}>
+                    <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                        Теперь Вы можете <a href="#" className="text-blue-700 hover:underline dark:text-blue-500" onClick={(event) => this.openLoginModal(event)}>авторизоваться</a>.
+                    </div>
+                </ModalWrapper>
+            );
+        }
+
         return (
             // @ts-ignore
             <ModalWrapper type={'registration'} title={'Регистрация'}>
@@ -172,10 +211,15 @@ class RegistrationModal extends Component<Properties, State> {
                         {this.state.errors && <FormError error={this.state.errors.password_repeat} />}
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >Зарегистрироваться</button>
+                    {this.state.isFormInProcess
+                        ? <DisabledButton text={'Зарегистрироваться'} />
+                        : (
+                            <button
+                                type="submit"
+                                className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            >Зарегистрироваться</button>
+                        )
+                    }
 
                     <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                         Уже есть аккаунт? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500" onClick={(event) => this.openLoginModal(event)}>Авторизоваться</a>
