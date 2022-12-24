@@ -1,51 +1,40 @@
-import {Component} from 'preact';
 import {connect} from 'unistore/preact';
 import ModalWrapper from './ModalWrapper';
-import {StoreStateInterface} from '../../types';
-import {modalActions, modalType} from '../../actions/modalActions';
+import {modalActions} from '../../actions/modalActions';
 import {register} from '../../repository/user';
-import FormError from '../Form/FormError';
 import {classNames} from '../../helpers';
 import DisabledButton from '../Form/DisabledButton';
+import AbstractModalForm, {BaseProperties, baseState, BaseState} from './AbstractModalForm';
 
 
-interface Properties extends StoreStateInterface {
-    switchModals(oldType: modalType, newType: modalType): void;
-}
-interface State {
+interface Properties extends BaseProperties {}
+interface State extends BaseState {
     email: string|null,
     name: string|null,
     password: string|null,
-    password_repeat: string|null,
-
-    errors: any,
-    isFormInProcess: boolean,
-    modalType: 'registration'|'success'
+    password_repeat: string|null
 }
 
 
-class RegistrationModal extends Component<Properties, State> {
+class RegistrationModal extends AbstractModalForm<Properties, State> {
     constructor(properties: Properties) {
         super(properties);
 
         this.state = {
+            ...baseState,
+            modalType: 'registration',
+
             email: null,
             name: null,
             password: null,
             password_repeat: null,
-
-            errors: null,
-            isFormInProcess: false,
-            modalType: 'registration'
         };
     }
 
     private openLoginModal(event: Event) {
         event.preventDefault();
 
-        this.props.switchModals(this.state.modalType, 'login');
-
-        this.setState({modalType: 'registration'})
+        this.switchModalTo('login');
     }
 
     private onInputChanged(event: Event) {
@@ -61,14 +50,12 @@ class RegistrationModal extends Component<Properties, State> {
         this.setState(changeData);
     }
 
-    private resetForm() {
-        this.setState({
+    protected resetForm() {
+        super.resetForm({
             email: null,
             name: null,
             password: null,
             password_repeat: null,
-
-            errors: [],
         });
     }
 
@@ -87,27 +74,17 @@ class RegistrationModal extends Component<Properties, State> {
 
         this.setState({isFormInProcess: false});
 
-        if (result.errors) {
-            this.setState({
-                errors: result.errors.reduce(
-                    (object, error) => ({...object, [error.path]: error.message}),
-                    {}
-                ),
-            });
-        } else {
-            this.resetForm();
-
-            this.props.switchModals('registration', 'success');
-
-            this.setState({modalType: 'success'});
-        }
+        this.processResponse(
+            result,
+            (): void => this.switchModalTo('success')
+        );
     }
 
     render() {
         if (this.state.modalType === 'success') {
             return (
                 // @ts-ignore
-                <ModalWrapper type={'success'} title={'Вы успешно зарегистрированы!'} onClose={(): void => this.setState({modalType: 'registration'})}>
+                <ModalWrapper type={'success'} title={'Вы успешно зарегистрированы!'} onClose={(): void => this.setPreviousModal()}>
                     <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                         Теперь Вы можете <a href="#" className="text-blue-700 hover:underline dark:text-blue-500" onClick={(event) => this.openLoginModal(event)}>авторизоваться</a>.
                     </div>
@@ -119,6 +96,8 @@ class RegistrationModal extends Component<Properties, State> {
             // @ts-ignore
             <ModalWrapper type={'registration'} title={'Регистрация'}>
                 <form className="space-y-6" action="#" onSubmit={async (event) => await this.onSubmit(event)}>
+                    {this.renderGlobalError()}
+
                     <div>
                         <label
                             htmlFor="registration_email"
@@ -139,7 +118,7 @@ class RegistrationModal extends Component<Properties, State> {
                             required
                         />
 
-                        {this.state.errors && <FormError error={this.state.errors.email} />}
+                        {this.renderFormError('email')}
                     </div>
 
                     <div>
@@ -162,7 +141,7 @@ class RegistrationModal extends Component<Properties, State> {
                             required
                         />
 
-                        {this.state.errors && <FormError error={this.state.errors.name} />}
+                        {this.renderFormError('name')}
                     </div>
 
                     <div>
@@ -185,7 +164,7 @@ class RegistrationModal extends Component<Properties, State> {
                             required
                         />
 
-                        {this.state.errors && <FormError error={this.state.errors.password} />}
+                        {this.renderFormError('password')}
                     </div>
 
                     <div>
@@ -208,7 +187,7 @@ class RegistrationModal extends Component<Properties, State> {
                             required
                         />
 
-                        {this.state.errors && <FormError error={this.state.errors.password_repeat} />}
+                        {this.renderFormError('password_repeat')}
                     </div>
 
                     {this.state.isFormInProcess
