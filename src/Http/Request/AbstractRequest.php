@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Request;
+namespace App\Http\Request;
 
-use App\Exception\Request\ConstraintViolationsException;
+use App\Http\Exception\Request\ConstraintViolationsException;
 use DigitalRevolution\SymfonyRequestValidation\AbstractValidatedRequest;
 use DigitalRevolution\SymfonyRequestValidation\Constraint\RequestConstraintFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -26,11 +27,6 @@ abstract class AbstractRequest extends AbstractValidatedRequest
         parent::__construct($requestStack, $validator, $constraintFactory);
     }
 
-    protected function handleViolations(ConstraintViolationListInterface $violationList): ?Response
-    {
-        throw new ConstraintViolationsException($violationList);
-    }
-
     public function checkCsrfToken(mixed $token, ExecutionContextInterface $context, $payload): void
     {
         if (!$token) {
@@ -45,5 +41,22 @@ abstract class AbstractRequest extends AbstractValidatedRequest
                 ->setCode('csrf_is_invalid')
                 ->addViolation();
         }
+    }
+
+    protected function getCsrfTokenValidationRules(): array
+    {
+        return [
+            'csrf' => [
+                'required|string',
+                new Callback(
+                    $this->checkCsrfToken(...)
+                ),
+            ],
+        ];
+    }
+
+    protected function handleViolations(ConstraintViolationListInterface $violationList): ?Response
+    {
+        throw new ConstraintViolationsException($violationList);
     }
 }

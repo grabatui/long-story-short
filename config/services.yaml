@@ -15,3 +15,7 @@ services:
     App\EventListener\ExceptionEventListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    App\Core\Symfony\Security\CustomJsonLoginAuthenticator:
+        calls:
+            - setTranslator: ['@translator']

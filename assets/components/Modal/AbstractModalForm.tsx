@@ -31,7 +31,7 @@ abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractFo
     }
 
     protected renderGlobalError() {
-        return this.state.globalError && <FormError error={'Приносим извинения за неудобства! Произошла непредвиденная ошибка и мы уже разбираемся!'} />;
+        return this.state.globalError && <FormError error={this.state.globalError} />;
     }
 
     protected switchModalTo(type: modalType): void {
@@ -52,21 +52,36 @@ abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractFo
         });
     }
 
+    protected onInputChanged(event: Event) {
+        const target = event.target;
+
+        if (!(target instanceof HTMLInputElement)) {
+            return;
+        }
+
+        let changeData: any = {};
+        changeData[target.getAttribute('name')] = target.value;
+
+        this.setState(changeData);
+    }
+
     protected processResponse(
         result: DefaultResponseResult,
         onSuccess: () => void,
-        onUndefinedError?: (error: string) => void
+        onUndefinedError?: (error: string, errorType: string) => void
     ): void {
         const parentOnUndefinedError = onUndefinedError;
 
-        onUndefinedError = (error: string) => {
+        onUndefinedError = (error: string, errorType: string) => {
             //@ts-ignore
             this.setState({
-                globalError: error,
+                globalError: errorType === 'output_error'
+                    ? error
+                    : 'Приносим извинения за неудобства! Произошла непредвиденная ошибка и мы уже разбираемся!',
             })
 
             if (parentOnUndefinedError) {
-                parentOnUndefinedError(error);
+                parentOnUndefinedError(error, errorType);
             }
         };
 

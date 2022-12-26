@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Domain\Registration\Entity;
+namespace App\Core\Domain\Authorization\Entity;
 
-class User
+class NewUser
 {
     public function __construct(
         private readonly string $email,

@@ -3,7 +3,7 @@
 namespace App\Controller\v1;
 
 use App\Core\Persistence\Entity\User;
-use App\Entity\Enum\ResponseTypeEnum;
+use App\Http\Entity\Enum\ResponseTypeEnum;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 

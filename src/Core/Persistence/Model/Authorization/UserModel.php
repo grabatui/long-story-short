@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Persistence\Model\Registration;
+namespace App\Core\Persistence\Model\Authorization;
 
-use App\Core\Domain\Registration\Entity\User as DomainUser;
+use App\Core\Domain\Authorization\Entity\NewUser as DomainUser;
 use App\Core\Persistence\Entity\User as DatabaseUser;
 
 class UserModel

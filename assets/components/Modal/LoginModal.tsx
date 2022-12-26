@@ -1,28 +1,72 @@
-import {Component} from 'preact';
 import {connect} from 'unistore/preact';
 import ModalWrapper from './ModalWrapper';
-import {StoreStateInterface} from '../../types';
-import {modalActions, modalType} from "../../actions/modalActions";
+import {modalActions} from '../../actions/modalActions';
+import AbstractModalForm, {BaseProperties, baseState, BaseState} from './AbstractModalForm';
+import {classNames} from '../../helpers';
+import {login} from "../../repository/user";
 
 
-interface Properties extends StoreStateInterface {
-    switchModals(oldType: modalType, newType: modalType): void;
+interface Properties extends BaseProperties {}
+interface State extends BaseState {
+    email: string|null,
+    password: string|null,
+    remember_me: boolean
 }
-interface State {}
 
 
-class LoginModal extends Component<Properties, State> {
+class LoginModal extends AbstractModalForm<Properties, State> {
+    constructor(properties: Properties) {
+        super(properties);
+
+        this.state = {
+            ...baseState,
+            modalType: 'login',
+
+            email: null,
+            password: null,
+            remember_me: false
+        }
+    }
+
     private openRegistrationModal(event: Event) {
         event.preventDefault();
 
-        this.props.switchModals('login', 'registration');
+        this.switchModalTo('registration');
+    }
+
+    protected resetForm() {
+        super.resetForm({
+            email: null,
+            password: null,
+        });
+    }
+
+    private async onSubmit(event: Event) {
+        event.preventDefault();
+
+        this.setState({isFormInProcess: true});
+
+        const result = await login(
+            this.props.csrf,
+            this.state.email,
+            this.state.password
+        );
+
+        this.setState({isFormInProcess: false});
+
+        this.processResponse(
+            result,
+            (): void => this.switchModalTo('success')
+        );
     }
 
     render() {
         return (
             // @ts-ignore
             <ModalWrapper type={'login'} title={'Авторизация'}>
-                <form className="space-y-6" action="#">
+                <form className="space-y-6" action="#" onSubmit={async (event) => await this.onSubmit(event)}>
+                    {this.renderGlobalError()}
+
                     <div>
                         <label
                             htmlFor="email"
@@ -32,12 +76,20 @@ class LoginModal extends Component<Properties, State> {
                         <input
                             type="email"
                             name="email"
-                            id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            placeholder="your@email.com"
+                            value={this.state.email}
+                            onInput={(event: Event) => this.onInputChanged(event)}
+                            id="login_email"
+                            className={classNames([
+                                'bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white',
+                                this.state.errors && this.state.errors.email ? 'border-red-500' : 'border-gray-300'
+                            ])}
+                            placeholder="john@doe.com"
                             required
                         />
+
+                        {this.renderFormError('email')}
                     </div>
+
                     <div>
                         <label
                             htmlFor="password"
@@ -47,11 +99,18 @@ class LoginModal extends Component<Properties, State> {
                         <input
                             type="password"
                             name="password"
-                            id="password"
+                            value={this.state.password}
+                            onInput={(event: Event) => this.onInputChanged(event)}
+                            id="login_password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            className={classNames([
+                                'bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white',
+                                this.state.errors && this.state.errors.email ? 'border-red-500' : 'border-gray-300'
+                            ])}
                             required
                         />
+
+                        {this.renderFormError('password')}
                     </div>
 
                     <div className="flex justify-between">
@@ -62,7 +121,6 @@ class LoginModal extends Component<Properties, State> {
                                     type="checkbox"
                                     value=""
                                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                                    required
                                 />
                             </div>
 

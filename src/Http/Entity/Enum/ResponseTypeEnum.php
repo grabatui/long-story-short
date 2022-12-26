@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Entity\Enum;
+namespace App\Http\Entity\Enum;
 
 enum ResponseTypeEnum
 {
     case error;
+    case output_error;
     case success;
 }

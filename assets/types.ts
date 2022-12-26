@@ -18,7 +18,7 @@ export interface ResponseResultError {
 
 export interface DefaultResponseResult {
     message: string,
-    type: 'success'|'error',
+    type: 'success'|'output_error'|'error',
     errors: Array<ResponseResultError>,
     data: object|null
 }

@@ -36,19 +36,24 @@ abstract class AbstractForm<ChildProperties, ChildState> extends Component<Child
     protected processResponse(
         result: DefaultResponseResult,
         onSuccess: () => void,
-        onUndefinedError: (error: string) => void
+        onUndefinedError: (error: string, errorType: string) => void
     ) {
-        if (result.type === 'error') {
+        if (['error', 'output_error'].indexOf(result.type) >= 0) {
             const state: any = {};
 
             if (result.errors.length > 0) {
                 state.globalError = null;
-                state.errors = result.errors.reduce(
-                    (object, error) => ({...object, [error.path]: error.message}),
-                    {}
-                )
+
+                state.errors = {};
+                for (const error of result.errors) {
+                    if (state.errors.hasOwnProperty(error.path)) {
+                        state.errors[error.path] += ' ' + error.message;
+                    } else {
+                        state.errors[error.path] = error.message;
+                    }
+                }
             } else {
-                onUndefinedError(result.message);
+                onUndefinedError(result.message, result.type);
             }
 
             this.setState(state);

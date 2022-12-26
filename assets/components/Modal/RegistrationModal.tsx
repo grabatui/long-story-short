@@ -37,19 +37,6 @@ class RegistrationModal extends AbstractModalForm<Properties, State> {
         this.switchModalTo('login');
     }
 
-    private onInputChanged(event: Event) {
-        const target = event.target;
-
-        if (!(target instanceof HTMLInputElement)) {
-            return;
-        }
-
-        let changeData: any = {};
-        changeData[target.getAttribute('name')] = target.value;
-
-        this.setState(changeData);
-    }
-
     protected resetForm() {
         super.resetForm({
             email: null,

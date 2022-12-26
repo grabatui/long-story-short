@@ -3,7 +3,7 @@
 namespace App\Controller\v1\User;
 
 use App\Controller\v1\AbstractController;
-use App\Entity\Enum\UserTypeEnum;
+use App\Http\Entity\Enum\UserTypeEnum;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Core\Persistence\Action\Registration;
+namespace App\Core\Persistence\Action\Authorization;
 
-use App\Core\Domain\Registration\Entity\User;
-use App\Core\Domain\Registration\RegisterUserInterface;
-use App\Core\Persistence\Model\Registration\UserModel;
+use App\Core\Domain\Authorization\Entity\NewUser;
+use App\Core\Domain\Authorization\RegisterUserInterface;
+use App\Core\Persistence\Model\Authorization\UserModel;
 use App\Core\Persistence\Repository\UserRepository;
 
 class RegisterUserAction implements RegisterUserInterface
@@ -15,7 +15,7 @@ class RegisterUserAction implements RegisterUserInterface
     ) {
     }
 
-    public function run(User $user, string $hashedPassword): void
+    public function run(NewUser $user, string $hashedPassword): void
     {
         $this->userRepository->save(
             $this->userModel->toDatabase($user, $hashedPassword),

@@ -3,9 +3,9 @@
 namespace App\Controller\v1\Authorization;
 
 use App\Controller\v1\AbstractController;
-use App\Core\Domain\Registration\Entity\User;
-use App\Core\UseCase\Registration\RegisterUserUseCase;
-use App\Request\v1\Authorization\RegistrationRequest;
+use App\Core\Domain\Authorization\Entity\NewUser;
+use App\Core\UseCase\Authorization\RegisterUserUseCase;
+use App\Http\Request\v1\Authorization\RegistrationRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,7 +23,7 @@ class RegistrationController extends AbstractController
     public function index(RegistrationRequest $request): Response
     {
         $this->registerUserUseCase->run(
-            new User(
+            new NewUser(
                 $request->getEmail(),
                 $request->getName(),
                 $request->getPassword()

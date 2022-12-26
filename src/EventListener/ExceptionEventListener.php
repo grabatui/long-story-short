@@ -2,8 +2,9 @@
 
 namespace App\EventListener;
 
-use App\Entity\Enum\ResponseTypeEnum;
-use App\Exception\Request\ConstraintViolationsException;
+use App\Core\Domain\Common\Exception\InterfaceException;
+use App\Http\Entity\Enum\ResponseTypeEnum;
+use App\Http\Exception\Request\ConstraintViolationsException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -13,6 +14,10 @@ class ExceptionEventListener
 {
     private const CONTENT_TYPE_HEADER_KEY = 'Content-Type';
     private const APPLICATION_JSON_HEADER_VALUE = 'application/json';
+
+    private const OUTPUT_EXCEPTIONS = [
+        InterfaceException::class,
+    ];
 
     public function onKernelException(ExceptionEvent $event): void
     {
@@ -44,7 +49,9 @@ class ExceptionEventListener
     {
         $result = [
             'message' => $exception->getMessage(),
-            'type' => ResponseTypeEnum::error->name,
+            'type' => $this->isExceptionCanBeOutput($exception)
+                ? ResponseTypeEnum::output_error->name
+                : ResponseTypeEnum::error->name,
             'errors' => [],
         ];
 
@@ -73,5 +80,10 @@ class ExceptionEventListener
             ),
             '[]'
         );
+    }
+
+    private function isExceptionCanBeOutput(\Throwable $exception): bool
+    {
+        return in_array(get_class($exception), static::OUTPUT_EXCEPTIONS);
     }
 }

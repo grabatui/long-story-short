@@ -18,6 +18,9 @@ security:
             json_login:
                 check_path: v1_authorization_login
 
+            custom_authenticators:
+                - App\Core\Symfony\Security\CustomJsonLoginAuthenticator
+
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

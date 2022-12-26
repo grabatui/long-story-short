@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception\Request;
+namespace App\Http\Exception\Request;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;

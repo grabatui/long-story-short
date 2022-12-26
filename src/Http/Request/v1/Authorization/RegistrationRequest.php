@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Request\v1\Authorization;
+namespace App\Http\Request\v1\Authorization;
 
 use App\Core\Domain\Common\User\IsEmailAlreadyExistsInterface;
-use App\Request\AbstractRequest;
+use App\Http\Request\AbstractRequest;
 use DigitalRevolution\SymfonyRequestValidation\Constraint\RequestConstraintFactory;
 use DigitalRevolution\SymfonyRequestValidation\ValidationRules;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,12 +28,8 @@ class RegistrationRequest extends AbstractRequest
     {
         return new ValidationRules([
             'request' => [
-                'csrf' => [
-                    'required|string',
-                    new Callback(
-                        $this->checkCsrfToken(...)
-                    ),
-                ],
+                ...$this->getCsrfTokenValidationRules(),
+
                 'email' => [
                     'required|email',
                     new Callback(
