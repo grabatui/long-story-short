@@ -11,6 +11,7 @@ import Loader from './Loader';
 import {modalActions, modalType} from '../actions/modalActions';
 import {userActions} from '../actions/userActions';
 import {store} from '../store';
+import {route} from "preact-router";
 
 
 interface Properties extends StoreStateInterface {
@@ -75,6 +76,14 @@ class Header extends Component<Properties, State> {
 
         this.props.logout();
         this.props.storeUserToken(null);
+        this.setState({isProfileMenuOpen: false});
+    }
+
+    private toProfile(event: Event) {
+        event.preventDefault();
+
+        route('/profile');
+        this.setState({isProfileMenuOpen: false});
     }
 
     private renderProfileMenu() {
@@ -82,17 +91,55 @@ class Header extends Component<Properties, State> {
             return <Loader />
         }
 
+        let links;
+
         if (this.props.user.type == 'unauthorized') {
-            return <Component>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={(event) => this.showLoginModal(event)}>Авторизоваться</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={(event) => this.showRegistrationModal(event)}>Зарегистрироваться</a>
-            </Component>
+            links = [
+                {
+                    onClick: (event: Event) => this.showLoginModal(event),
+                    text: 'Авторизоваться',
+                },
+                {
+                    onClick: (event: Event) => this.showRegistrationModal(event),
+                    text: 'Зарегистрироваться',
+                },
+            ];
+        } else {
+            links = [
+                {
+                    onClick: (event: Event) => this.toProfile(event),
+                    text: 'Ваш профиль',
+                    url: '/profile'
+                },
+                {
+                    onClick: (event: Event) => this.logout(event),
+                    text: 'Выйти',
+                },
+            ];
         }
 
-        return <Component>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700">Ваш профиль</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700" onClick={(event) => this.logout(event)}>Выйти</a>
-        </Component>
+        return (
+            <Component>
+                {links.map(
+                    (link: any) => {
+                        const linkComponent = (isMatches: boolean) => (
+                            <a
+                                href="#"
+                                className={classNames([
+                                    'block px-4 py-2 text-sm',
+                                    isMatches ? 'text-blue-700' : 'text-gray-700'
+                                ])}
+                                onClick={link.onClick}
+                            >{link.text}</a>
+                        );
+
+                        return link.url
+                            ? <Match path={link.url || null}>{(match: MatchItemType) => linkComponent(match.matches)}</Match>
+                            : linkComponent(false)
+                    }
+                )}
+            </Component>
+        );
     }
 
     render() {
