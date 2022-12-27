@@ -7,10 +7,12 @@ import {login} from '../../repository/user';
 import {route} from 'preact-router';
 import {store} from '../../store';
 import {userActions} from '../../actions/userActions';
+import DisabledButton from "../Form/DisabledButton";
 
 
 interface Properties extends BaseProperties {
     storeUserToken(token: string): void;
+    loadUserAction(): void;
 }
 interface State extends BaseState {
     email: string|null,
@@ -63,6 +65,7 @@ class LoginModal extends AbstractModalForm<Properties, State> {
             result,
             async (): Promise<any> => {
                 await this.props.storeUserToken(result.data.token);
+                await this.props.loadUserAction();
 
                 route('/profile', true);
 
@@ -144,10 +147,15 @@ class LoginModal extends AbstractModalForm<Properties, State> {
                         <a href="#" className="text-sm text-blue-700 hover:underline dark:text-blue-500">Забыли пароль?</a>
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >Авторизоваться</button>
+                    {this.state.isFormInProcess
+                        ? <DisabledButton text={'Авторизоваться'} />
+                        : (
+                            <button
+                                type="submit"
+                                className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            >Авторизоваться</button>
+                        )
+                    }
 
                     <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                         Ещё не зарегистрированы? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500" onClick={(event) => this.openRegistrationModal(event)}>Создать аккаунт</a>

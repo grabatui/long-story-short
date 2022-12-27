@@ -12,8 +12,14 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        registration:
+            pattern: ^/api/v(\d+)/authorization/register
+            stateless: true
+            lazy: true
+            provider: app_user_provider
+
         authorization:
-            pattern: ^/api/v(\d+)/authorization/(login|register)
+            pattern: ^/api/v(\d+)/authorization/login
             stateless: true
             lazy: true
             provider: app_user_provider
@@ -28,6 +34,9 @@ security:
             lazy: true
             provider: app_user_provider
             jwt: ~
+
+            logout:
+                path: v1_authorization_logout
 
     access_control:
         - { path: ^/api/v(\d+)/authorization/(login|register), roles: PUBLIC_ACCESS }

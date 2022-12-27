@@ -50,3 +50,12 @@ export const getUser = async (token: string): Promise<DefaultResponseResult<User
     return await fetch('/api/v1/user/init', {headers: makeDefaultApiHeaders(token)})
         .then((response) => response.json());
 };
+
+export const logout = async (token: string): Promise<DefaultResponseResult<any>> => {
+    return await fetch('/api/v1/authorization/logout', {
+        method: 'POST',
+        headers: makeDefaultApiHeaders(token),
+        mode: 'cors'
+    })
+        .then((response) => response.json());
+};
