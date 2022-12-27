@@ -8,14 +8,11 @@ import {classNames} from '../helpers';
 import OutsideClickWrapper from './Wrapper/OutsideClickWrapper';
 import {StoreStateInterface} from "../types";
 import Loader from './Loader';
-import {store} from '../store';
-import {userActions} from "../actions/userActions";
 import {modalActions, modalType} from "../actions/modalActions";
 
 
 interface Properties extends StoreStateInterface {
     showModal(type: modalType): void;
-    loadUserAction(): void;
 }
 interface State {
     isMainMenuOpen: boolean,
@@ -53,10 +50,6 @@ class Header extends Component<Properties, State> {
             isMainMenuOpen: false,
             isProfileMenuOpen: false,
         };
-    }
-
-    componentDidMount() {
-        this.props.loadUserAction();
     }
 
     private showLoginModal(event: Event) {
@@ -194,4 +187,4 @@ class Header extends Component<Properties, State> {
     }
 }
 
-export default connect(['user'], {...userActions(store), ...modalActions(store)})(Header);
+export default connect(['user'], modalActions)(Header);

@@ -1,13 +1,17 @@
 import createStore from 'unistore';
 import devtools from 'unistore/devtools'
-import {StoreStateInterface} from "./types";
+import {StoreStateInterface} from './types';
 
 
 const initialState: StoreStateInterface = {
     // @ts-ignore
     csrf: window.__CONFIG__.csrf,
 
-    user: null,
+    token: null,
+    user: {
+        id: null,
+        type: 'unauthorized',
+    },
     shownModals: []
 };
 

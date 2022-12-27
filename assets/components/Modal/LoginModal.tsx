@@ -3,10 +3,15 @@ import ModalWrapper from './ModalWrapper';
 import {modalActions} from '../../actions/modalActions';
 import AbstractModalForm, {BaseProperties, baseState, BaseState} from './AbstractModalForm';
 import {classNames} from '../../helpers';
-import {login} from "../../repository/user";
+import {login} from '../../repository/user';
+import {route} from 'preact-router';
+import {store} from '../../store';
+import {userActions} from '../../actions/userActions';
 
 
-interface Properties extends BaseProperties {}
+interface Properties extends BaseProperties {
+    storeUserToken(token: string): void;
+}
 interface State extends BaseState {
     email: string|null,
     password: string|null,
@@ -56,7 +61,13 @@ class LoginModal extends AbstractModalForm<Properties, State> {
 
         this.processResponse(
             result,
-            (): void => this.switchModalTo('success')
+            async (): Promise<any> => {
+                await this.props.storeUserToken(result.data.token);
+
+                route('/profile', true);
+
+                this.props.closeModal('login');
+            }
         );
     }
 
@@ -147,4 +158,4 @@ class LoginModal extends AbstractModalForm<Properties, State> {
     }
 }
 
-export default connect([], modalActions)(LoginModal);
+export default connect([], {...modalActions(store), ...userActions(store)})(LoginModal);

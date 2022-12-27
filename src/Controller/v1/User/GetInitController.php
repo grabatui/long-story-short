@@ -17,14 +17,7 @@ class GetInitController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (!$user) {
-            return $this->json([
-                'id' => null,
-                'type' => UserTypeEnum::unauthorized->name,
-            ]);
-        }
-
-        return $this->json([
+        return $this->success([
             'id' => $user->getId(),
             'type' => UserTypeEnum::authorized->name,
             'email' => $user->getEmail(),

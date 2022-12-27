@@ -10,6 +10,7 @@ import {DefaultResponseResult} from '../../types';
 
 export interface BaseProperties extends BaseFormProperties {
     showModal(type: modalType): void;
+    closeModal(type: modalType): void;
     switchModals(oldType: modalType, newType: modalType): void;
 }
 export interface BaseState extends BaseFormState {
@@ -66,8 +67,8 @@ abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractFo
     }
 
     protected processResponse(
-        result: DefaultResponseResult,
-        onSuccess: () => void,
+        result: DefaultResponseResult<object>,
+        onSuccess: () => any,
         onUndefinedError?: (error: string, errorType: string) => void
     ): void {
         const parentOnUndefinedError = onUndefinedError;

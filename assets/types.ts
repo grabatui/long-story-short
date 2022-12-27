@@ -6,8 +6,14 @@ export interface UserInterface {
 export interface StoreStateInterface {
     csrf: string,
 
+    token: string|null,
     user: UserInterface|null,
     shownModals: string[]
+}
+
+export interface AuthorizedInterface {
+    id: number,
+    token: string
 }
 
 export interface ResponseResultError {
@@ -16,9 +22,9 @@ export interface ResponseResultError {
     message: string
 }
 
-export interface DefaultResponseResult {
+export interface DefaultResponseResult<DataType> {
     message: string,
     type: 'success'|'output_error'|'error',
     errors: Array<ResponseResultError>,
-    data: object|null
+    data: DataType|null
 }

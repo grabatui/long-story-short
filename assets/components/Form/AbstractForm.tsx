@@ -34,8 +34,8 @@ abstract class AbstractForm<ChildProperties, ChildState> extends Component<Child
     }
 
     protected processResponse(
-        result: DefaultResponseResult,
-        onSuccess: () => void,
+        result: DefaultResponseResult<object>,
+        onSuccess: () => any,
         onUndefinedError: (error: string, errorType: string) => void
     ) {
         if (['error', 'output_error'].indexOf(result.type) >= 0) {
