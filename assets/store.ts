@@ -4,15 +4,12 @@ import {StoreStateInterface} from './types';
 
 
 const initialState: StoreStateInterface = {
-    // @ts-ignore
-    csrf: window.__CONFIG__.csrf,
-
     token: null,
     user: {
         id: null,
         type: 'unauthorized',
     },
-    shownModals: []
+    shownModal: null
 };
 
 

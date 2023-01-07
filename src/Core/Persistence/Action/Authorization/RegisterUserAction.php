@@ -7,11 +7,11 @@ use App\Core\Domain\Authorization\RegisterUserInterface;
 use App\Core\Persistence\Model\Authorization\UserModel;
 use App\Core\Persistence\Repository\UserRepository;
 
-class RegisterUserAction implements RegisterUserInterface
+readonly class RegisterUserAction implements RegisterUserInterface
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly UserModel $userModel
+        private UserRepository $userRepository,
+        private UserModel $userModel
     ) {
     }
 

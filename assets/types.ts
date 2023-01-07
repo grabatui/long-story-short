@@ -1,14 +1,15 @@
+import {modalType} from './actions/modalActions';
+
+
 export interface UserInterface {
     id: number|null,
     type: 'unauthorized'|'authorized'
 }
 
 export interface StoreStateInterface {
-    csrf: string,
-
     token: string|null,
     user: UserInterface|null,
-    shownModals: string[]
+    shownModal: modalType|null
 }
 
 export interface AuthorizedInterface {

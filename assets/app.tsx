@@ -11,6 +11,8 @@ import LoginModal from './components/Modal/LoginModal';
 import RegistrationModal from './components/Modal/RegistrationModal';
 import ProfileIndex from './controllers/Profile/ProfileIndex';
 import Wrapper from './components/Wrapper';
+import RestorePasswordModal from './components/Modal/RestorePasswordModal';
+import ResetPassword from './controllers/Profile/ResetPassword';
 
 
 type Properties = {}
@@ -28,10 +30,12 @@ class App extends Component<Properties, State> {
                     <Series path="/series" />
 
                     <ProfileIndex path="/profile" />
+                    <ResetPassword path="/profile/reset-password/:token" />
                 </Router>
 
                 <LoginModal />
                 <RegistrationModal />
+                <RestorePasswordModal />
             </Wrapper>
         );
     }

@@ -7,7 +7,7 @@ import {login} from '../../repository/user';
 import {route} from 'preact-router';
 import {store} from '../../store';
 import {userActions} from '../../actions/userActions';
-import DisabledButton from "../Form/DisabledButton";
+import DisabledButton from '../Form/DisabledButton';
 
 
 interface Properties extends BaseProperties {
@@ -16,8 +16,7 @@ interface Properties extends BaseProperties {
 }
 interface State extends BaseState {
     email: string|null,
-    password: string|null,
-    remember_me: boolean
+    password: string|null
 }
 
 
@@ -30,8 +29,7 @@ class LoginModal extends AbstractModalForm<Properties, State> {
             modalType: 'login',
 
             email: null,
-            password: null,
-            remember_me: false
+            password: null
         }
     }
 
@@ -39,6 +37,12 @@ class LoginModal extends AbstractModalForm<Properties, State> {
         event.preventDefault();
 
         this.switchModalTo('registration');
+    }
+
+    private openRestorePasswordModal(event: Event) {
+        event.preventDefault();
+
+        this.switchModalTo('restore_password');
     }
 
     protected resetForm() {
@@ -54,7 +58,6 @@ class LoginModal extends AbstractModalForm<Properties, State> {
         this.setState({isFormInProcess: true});
 
         const result = await login(
-            this.props.csrf,
             this.state.email,
             this.state.password
         );
@@ -69,7 +72,7 @@ class LoginModal extends AbstractModalForm<Properties, State> {
 
                 route('/profile', true);
 
-                this.props.closeModal('login');
+                this.props.closeModal();
             }
         );
     }
@@ -127,24 +130,12 @@ class LoginModal extends AbstractModalForm<Properties, State> {
                         {this.renderFormError('password')}
                     </div>
 
-                    <div className="flex justify-between">
-                        <div className="flex items-start">
-                            <div className="flex items-center h-5">
-                                <input
-                                    id="remember"
-                                    type="checkbox"
-                                    value=""
-                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                                />
-                            </div>
-
-                            <label
-                                htmlFor="remember"
-                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                            >Запомнить</label>
-                        </div>
-
-                        <a href="#" className="text-sm text-blue-700 hover:underline dark:text-blue-500">Забыли пароль?</a>
+                    <div className="text-right">
+                        <a
+                            href="#"
+                            className="text-sm text-blue-700 hover:underline dark:text-blue-500"
+                            onClick={(event) => this.openRestorePasswordModal(event)}
+                        >Забыли пароль?</a>
                     </div>
 
                     {this.state.isFormInProcess

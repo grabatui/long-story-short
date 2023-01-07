@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
 class ExceptionEventListener
 {
@@ -17,7 +19,13 @@ class ExceptionEventListener
 
     private const OUTPUT_EXCEPTIONS = [
         InterfaceException::class,
+        ResetPasswordExceptionInterface::class,
     ];
+
+    public function __construct(
+        private readonly TranslatorInterface $translator
+    ) {
+    }
 
     public function onKernelException(ExceptionEvent $event): void
     {
@@ -48,7 +56,7 @@ class ExceptionEventListener
     private function makeContent(\Throwable $exception): array
     {
         $result = [
-            'message' => $exception->getMessage(),
+            'message' => $this->processExceptionMessage($exception),
             'type' => $this->isExceptionCanBeOutput($exception)
                 ? ResponseTypeEnum::output_error->name
                 : ResponseTypeEnum::error->name,
@@ -84,6 +92,23 @@ class ExceptionEventListener
 
     private function isExceptionCanBeOutput(\Throwable $exception): bool
     {
-        return in_array(get_class($exception), static::OUTPUT_EXCEPTIONS);
+        foreach (static::OUTPUT_EXCEPTIONS as $outputExceptionClass) {
+            if ($exception instanceof $outputExceptionClass) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function processExceptionMessage(\Throwable $exception): string
+    {
+        if ($exception instanceof ResetPasswordExceptionInterface) {
+            return $this->translator->trans(
+                $exception->getReason()
+            );
+        }
+
+        return $exception->getMessage();
     }
 }

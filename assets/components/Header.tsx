@@ -11,7 +11,7 @@ import Loader from './Loader';
 import {modalActions, modalType} from '../actions/modalActions';
 import {userActions} from '../actions/userActions';
 import {store} from '../store';
-import {route} from "preact-router";
+import {route} from 'preact-router';
 
 
 interface Properties extends StoreStateInterface {

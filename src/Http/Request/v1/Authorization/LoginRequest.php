@@ -11,8 +11,6 @@ class LoginRequest extends AbstractRequest
     {
         return new ValidationRules([
             'request' => [
-                ...$this->getCsrfTokenValidationRules(),
-
                 'email' => 'required|email',
                 'password' => 'required|string|between:7,40',
             ],

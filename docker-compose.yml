@@ -14,9 +14,13 @@ services:
     networks:
       database:
       php-fpm:
+      mailer:
   php-fpm:
     build:
       context: ./docker/php-fpm/development
+    environment:
+      MAIL_DEFAULT_FROM: ${MAIL_DEFAULT_FROM}
+      MAIL_HELP_EMAIL: ${MAIL_HELP_EMAIL}
     volumes:
       - .:/app
     depends_on:
@@ -26,6 +30,7 @@ services:
     networks:
       database:
       php-fpm:
+      mailer:
   php-cli:
     build:
       context: ./docker/php-cli/development
@@ -34,6 +39,8 @@ services:
       - composer:/root/.composer/cache
     depends_on:
       - database
+    networks:
+      database:
   database:
     build:
       context: ./docker/postgres/development
@@ -49,6 +56,14 @@ services:
       - "15434:5432"
     networks:
       database:
+###> symfony/mailer ###
+  mailer:
+    image: schickling/mailcatcher
+    ports:
+      - "1025:1025"
+    networks:
+      mailer:
+###< symfony/mailer ###
 
 volumes:
   composer:
@@ -57,3 +72,4 @@ volumes:
 networks:
   database:
   php-fpm:
+  mailer:

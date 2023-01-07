@@ -10,8 +10,7 @@ import {DefaultResponseResult} from '../../types';
 
 export interface BaseProperties extends BaseFormProperties {
     showModal(type: modalType): void;
-    closeModal(type: modalType): void;
-    switchModals(oldType: modalType, newType: modalType): void;
+    closeModal(): void;
 }
 export interface BaseState extends BaseFormState {
     modalType: modalType|null,
@@ -36,7 +35,7 @@ abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractFo
     }
 
     protected switchModalTo(type: modalType): void {
-        this.props.switchModals(this.state.modalType, type);
+        this.props.showModal(type);
 
         //@ts-ignore
         this.setState({
@@ -68,7 +67,7 @@ abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractFo
 
     protected processResponse(
         result: DefaultResponseResult<object>,
-        onSuccess: () => any,
+        onSuccess?: () => any,
         onUndefinedError?: (error: string, errorType: string) => void
     ): void {
         const parentOnUndefinedError = onUndefinedError;

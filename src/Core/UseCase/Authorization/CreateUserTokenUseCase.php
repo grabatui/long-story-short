@@ -4,10 +4,10 @@ namespace App\Core\UseCase\Authorization;
 
 use App\Core\Domain\Authorization\CreateTokenByUserIdInterface;
 
-class CreateUserTokenUseCase
+readonly class CreateUserTokenUseCase
 {
     public function __construct(
-        private readonly CreateTokenByUserIdInterface $createTokenByUserId
+        private CreateTokenByUserIdInterface $createTokenByUserId
     ) {
     }
 

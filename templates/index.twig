@@ -2,10 +2,4 @@
 
 {% block body %}
     <div id="app"></div>
-
-    <script type="application/javascript">
-        window.__CONFIG__ = {
-            csrf: "{{ csrf_token('unique_string') }}"
-        };
-    </script>
 {% endblock %}

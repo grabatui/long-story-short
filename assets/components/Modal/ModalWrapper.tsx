@@ -42,7 +42,7 @@ class ModalWrapper extends Component<Properties, State> {
     }
 
     render() {
-        if (this.props.shownModals.indexOf(this.props.type) < 0) {
+        if (this.props.shownModal !== this.props.type) {
             return;
         }
 
@@ -78,4 +78,4 @@ class ModalWrapper extends Component<Properties, State> {
     }
 }
 
-export default connect(['shownModals'], modalActions)(ModalWrapper);
+export default connect(['shownModal'], modalActions)(ModalWrapper);

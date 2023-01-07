@@ -8,12 +8,12 @@ use App\Core\Domain\Common\Exception\CriticalInterfaceException;
 use App\Core\Domain\Common\User\IsUserAuthorizedInterface;
 use App\Core\Domain\Common\User\MakePasswordHashInterface;
 
-class RegisterUserUseCase
+readonly class RegisterUserUseCase
 {
     public function __construct(
-        private readonly IsUserAuthorizedInterface $isUserAuthorized,
-        private readonly MakePasswordHashInterface $makePasswordHash,
-        private readonly RegisterUserInterface $registerUser
+        private IsUserAuthorizedInterface $isUserAuthorized,
+        private MakePasswordHashInterface $makePasswordHash,
+        private RegisterUserInterface $registerUser
     ) {
     }
 

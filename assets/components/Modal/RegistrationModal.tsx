@@ -52,7 +52,6 @@ class RegistrationModal extends AbstractModalForm<Properties, State> {
         this.setState({isFormInProcess: true});
 
         const result = await register(
-            this.props.csrf,
             this.state.email,
             this.state.name,
             this.state.password,
@@ -196,4 +195,4 @@ class RegistrationModal extends AbstractModalForm<Properties, State> {
     }
 }
 
-export default connect(['csrf'], modalActions)(RegistrationModal);
+export default connect([], modalActions)(RegistrationModal);
