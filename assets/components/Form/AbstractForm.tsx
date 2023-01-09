@@ -1,5 +1,6 @@
 import {DefaultResponseResult, StoreStateInterface} from '../../types';
 import {Component} from 'preact';
+import FormError from "./FormError";
 
 
 export interface BaseProperties extends StoreStateInterface {}
@@ -33,10 +34,31 @@ abstract class AbstractForm<ChildProperties, ChildState> extends Component<Child
         });
     }
 
+    protected renderFormError(field: string) {
+        return this.state.errors && <FormError error={this.state.errors[field]} />;
+    }
+
+    protected renderGlobalError() {
+        return this.state.globalError && <FormError error={this.state.globalError} />;
+    }
+
+    protected onInputChanged(event: Event) {
+        const target = event.target;
+
+        if (!(target instanceof HTMLInputElement)) {
+            return;
+        }
+
+        let changeData: any = {};
+        changeData[target.getAttribute('name')] = target.value;
+
+        this.setState(changeData);
+    }
+
     protected processResponse(
         result: DefaultResponseResult<object>,
-        onSuccess: () => any,
-        onUndefinedError: (error: string, errorType: string) => void
+        onSuccess?: () => any,
+        onUndefinedError?: (error: string, errorType: string) => void
     ) {
         if (['error', 'output_error'].indexOf(result.type) >= 0) {
             const state: any = {};

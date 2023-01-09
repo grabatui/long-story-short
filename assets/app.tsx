@@ -1,6 +1,6 @@
 import './styles/app.css';
 
-import Router from 'preact-router';
+import Router, {route, RouterOnChangeArgs} from 'preact-router';
 import {Component, render} from 'preact';
 import {Provider} from 'unistore/preact';
 import Header from './components/Header';
@@ -13,10 +13,18 @@ import ProfileIndex from './controllers/Profile/ProfileIndex';
 import Wrapper from './components/Wrapper';
 import RestorePasswordModal from './components/Modal/RestorePasswordModal';
 import ResetPassword from './controllers/Profile/ResetPassword';
+import Error404 from './controllers/Error404';
 
 
 type Properties = {}
 type State = {}
+
+
+const handleRoute = (routeItem: RouterOnChangeArgs) => {
+    if (!routeItem.current) {
+        setTimeout(() => route('/404', false), 100);
+    }
+};
 
 
 class App extends Component<Properties, State> {
@@ -25,12 +33,14 @@ class App extends Component<Properties, State> {
             <Wrapper>
                 <Header />
 
-                <Router>
+                <Router onChange={handleRoute}>
                     <Home path="/" />
                     <Series path="/series" />
 
                     <ProfileIndex path="/profile" />
-                    <ResetPassword path="/profile/reset-password/:token" />
+                    <ResetPassword path="/profile/reset-password/:resetToken" />
+
+                    <Error404 path="/404" />
                 </Router>
 
                 <LoginModal />

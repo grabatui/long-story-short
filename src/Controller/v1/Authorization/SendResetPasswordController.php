@@ -19,7 +19,7 @@ class SendResetPasswordController extends AbstractController
         '/api/v1/authorization/restore_password',
         name: 'v1_authorization_restore_password'
     )]
-    public function index(SendResetPasswordRequest $request): Response
+    public function __invoke(SendResetPasswordRequest $request): Response
     {
         $this->sendResetPasswordEmailUseCase->run(
             $request->getEmail()

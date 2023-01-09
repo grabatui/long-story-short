@@ -4,6 +4,7 @@ namespace App\Core\Persistence\Action\Authorization\ResetToken;
 
 use App\Core\Domain\Authorization\ResetToken\Entity\ResetToken;
 use App\Core\Domain\Authorization\ResetToken\MakeResetTokenByUserIdInterface;
+use App\Core\Domain\Common\Exception\CriticalInterfaceException;
 use App\Core\Domain\Common\Exception\NotFoundInterfaceException;
 use App\Core\Persistence\Model\Authorization\ResetTokenModel;
 use App\Core\Persistence\Repository\Adapter\ResetTokenRepository;
@@ -21,7 +22,7 @@ readonly class MakeResetTokenByUserIdAction implements MakeResetTokenByUserIdInt
 
     /**
      * @throws NotFoundInterfaceException
-     * @throws ResetPasswordExceptionInterface
+     * @throws CriticalInterfaceException
      */
     public function run(int $userId): ResetToken
     {
@@ -31,8 +32,12 @@ readonly class MakeResetTokenByUserIdAction implements MakeResetTokenByUserIdInt
             throw new NotFoundInterfaceException('Пользователь не найден');
         }
 
-        return $this->resetTokenModel->toDomain(
-            $this->resetTokenRepository->getResetTokenByUser($user)
-        );
+        $token = $this->resetTokenRepository->getResetTokenByUser($user);
+
+        if (!$token) {
+            throw new CriticalInterfaceException('Не получилось получить токен');
+        }
+
+        return $this->resetTokenModel->toDomain($token);
     }
 }

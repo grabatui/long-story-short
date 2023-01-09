@@ -20,7 +20,7 @@ class LoginController extends AbstractController
         '/api/v1/authorization/login',
         name: 'v1_authorization_login'
     )]
-    public function index(#[CurrentUser] ?User $user): Response
+    public function __invoke(#[CurrentUser] ?User $user): Response
     {
         if (!$user) {
             return $this->error(

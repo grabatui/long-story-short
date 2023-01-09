@@ -26,14 +26,6 @@ export const baseState: BaseState = {
 
 
 abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractForm<ChildProperties & BaseProperties, ChildState & BaseState>{
-    protected renderFormError(field: string) {
-        return this.state.errors && <FormError error={this.state.errors[field]} />;
-    }
-
-    protected renderGlobalError() {
-        return this.state.globalError && <FormError error={this.state.globalError} />;
-    }
-
     protected switchModalTo(type: modalType): void {
         this.props.showModal(type);
 
@@ -50,19 +42,6 @@ abstract class AbstractModalForm<ChildProperties, ChildState> extends AbstractFo
             modalType: this.state.previousModalType,
             previousModalType: null,
         });
-    }
-
-    protected onInputChanged(event: Event) {
-        const target = event.target;
-
-        if (!(target instanceof HTMLInputElement)) {
-            return;
-        }
-
-        let changeData: any = {};
-        changeData[target.getAttribute('name')] = target.value;
-
-        this.setState(changeData);
     }
 
     protected processResponse(

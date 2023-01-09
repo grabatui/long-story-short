@@ -12,7 +12,7 @@ class LogoutController extends AbstractController
         '/api/v1/authorization/logout',
         name: 'v1_authorization_logout'
     )]
-    public function index(): Response
+    public function __invoke(): Response
     {
         // Exists only for default security work
         throw new \RuntimeException('What are you doing here?');

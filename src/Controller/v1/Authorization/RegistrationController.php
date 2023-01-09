@@ -20,7 +20,7 @@ class RegistrationController extends AbstractController
         '/api/v1/authorization/register',
         name: 'v1_authorization_register'
     )]
-    public function index(RegistrationRequest $request): Response
+    public function __invoke(RegistrationRequest $request): Response
     {
         $this->registerUserUseCase->run(
             new NewUser(

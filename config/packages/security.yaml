@@ -13,7 +13,7 @@ security:
             security: false
 
         not_secure:
-            pattern: ^/api/v(\d+)/authorization/(register|restore_password)
+            pattern: ^/api/v(\d+)/authorization/(register|restore_password|check_reset_token|change_password)
             stateless: true
             lazy: true
             provider: app_user_provider
@@ -39,7 +39,7 @@ security:
                 path: v1_authorization_logout
 
     access_control:
-        - { path: ^/api/v(\d+)/authorization/(login|register|restore_password), roles: PUBLIC_ACCESS }
+        - { path: ^/api/v(\d+)/authorization/(login|register|restore_password|check_reset_token|change_password), roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

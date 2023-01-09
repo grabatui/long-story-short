@@ -42,5 +42,5 @@ export const userActions = (store: Store<StoreStateInterface>): userActionsType 
                 },
             })
         );
-    }
+    },
 });

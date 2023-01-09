@@ -13,7 +13,7 @@ class GetInitController extends AbstractController
         '/api/v1/user/init',
         name: 'v1_user_init'
     )]
-    public function index(): Response
+    public function __invoke(): Response
     {
         $user = $this->getUser();
 

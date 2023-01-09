@@ -14,11 +14,40 @@ readonly class ResetTokenRepository
     ) {
     }
 
-    /**
-     * @throws ResetPasswordExceptionInterface
-     */
-    public function getResetTokenByUser(User $user): ResetPasswordToken
+    public function getResetTokenByUser(User $user): ?ResetPasswordToken
     {
-        return $this->resetPasswordHelper->generateResetToken($user);
+        try {
+            return $this->resetPasswordHelper->generateResetToken($user);
+        } catch (ResetPasswordExceptionInterface) {}
+
+        return null;
+    }
+
+    public function isResetTokenIsValid(string $resetToken): bool
+    {
+        try {
+            $this->resetPasswordHelper->validateTokenAndFetchUser($resetToken);
+        } catch (ResetPasswordExceptionInterface) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getUserByResetToken(string $resetToken): ?User
+    {
+        try {
+            /** @var User $user */
+            $user = $this->resetPasswordHelper->validateTokenAndFetchUser($resetToken);
+
+            return $user;
+        } catch (ResetPasswordExceptionInterface) {}
+
+        return null;
+    }
+
+    public function deleteUsedResetToken(string $resetToken): void
+    {
+        $this->resetPasswordHelper->removeResetRequest($resetToken);
     }
 }

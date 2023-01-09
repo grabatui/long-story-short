@@ -68,3 +68,27 @@ export const logout = async (token: string): Promise<DefaultResponseResult<objec
     })
         .then((response) => response.json());
 };
+
+export const checkResetToken = async (reset_token: string): Promise<DefaultResponseResult<object>> => {
+    return await fetch('/api/v1/authorization/check_reset_token', {
+        method: 'POST',
+        headers: makeDefaultApiHeaders(),
+        body: JSON.stringify({reset_token}),
+        mode: 'cors'
+    })
+        .then((response) => response.json());
+};
+
+export const changeUserPassword = async (
+    reset_token: string,
+    password: string,
+    password_repeat: string
+): Promise<DefaultResponseResult<object>> => {
+    return await fetch('/api/v1/authorization/change_password', {
+        method: 'POST',
+        headers: makeDefaultApiHeaders(),
+        body: JSON.stringify({reset_token, password, password_repeat}),
+        mode: 'cors'
+    })
+        .then((response) => response.json());
+};
