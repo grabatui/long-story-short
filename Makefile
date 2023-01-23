@@ -1,14 +1,30 @@
 up: docker-up
 init: docker-down-clear docker-pull docker-build docker-up project-init
-test: project-test
+test: project-test project-behat
+migrations: project-migrations project-test-migrations
 
-project-init: project-composer-install
+project-init: project-composer-install project-generate-keys project-create-test-db
 
 project-composer-install:
 	docker-compose run --rm php-cli composer install
 
+project-generate-keys:
+	docker-compose run --rm php-cli php bin/console lexik:jwt:generate-keypair --skip-if-exists
+
+project-create-test-db:
+	docker-compose run --rm php-cli php bin/console doctrine:database:create --env=test --if-not-exists
+
 project-test:
 	docker-compose run --rm php-cli php bin/phpunit
+
+project-behat:
+	docker-compose run --rm php-cli vendor/bin/behat
+
+project-migrations:
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --quiet
+
+project-test-migrations:
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --env=test --quiet
 
 docker-up:
 	docker-compose up -d

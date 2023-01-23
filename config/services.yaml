@@ -8,14 +8,4 @@ services:
     App\:
         resource: '../src/'
         exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
             - '../src/Kernel.php'
-
-    App\EventListener\ExceptionEventListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
-
-    App\Core\Symfony\Security\CustomJsonLoginAuthenticator:
-        calls:
-            - setTranslator: ['@translator']

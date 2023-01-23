@@ -7,7 +7,7 @@ import Loader from './Loader';
 
 interface Properties extends StoreStateInterface {
     loadUserToken(): void;
-    loadUserAction(): void;
+    loadUser(): void;
 }
 interface State {
     isInitiated: boolean,
@@ -37,7 +37,7 @@ class Wrapper extends Component<Properties, State> {
         await this.props.loadUserToken();
 
         return Promise.all([
-            await this.props.loadUserAction(),
+            await this.props.loadUser(),
         ]);
     }
 

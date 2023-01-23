@@ -7,7 +7,7 @@ import {getCookie, removeCookie, setCookie} from 'typescript-cookie';
 type userActionsType = {
     loadUserToken(state: StoreStateInterface): void;
     storeUserToken(state: StoreStateInterface, token: string|null): void;
-    loadUserAction(state: StoreStateInterface): void;
+    loadUser(state: StoreStateInterface): void;
     logout(state: StoreStateInterface): void;
 };
 
@@ -24,7 +24,7 @@ export const userActions = (store: Store<StoreStateInterface>): userActionsType 
 
         store.setState({token: token});
     },
-    loadUserAction(state: StoreStateInterface): void {
+    loadUser(state: StoreStateInterface): void {
         if (!state.token) {
             return;
         }

@@ -1,0 +1,13 @@
+default:
+    suites:
+        default:
+            paths:
+                - '%paths.base%/tests/Feature'
+            contexts:
+                - App\Tests\Feature\v1\User\GetInitTest\FeatureContext
+
+    extensions:
+        FriendsOfBehat\SymfonyExtension:
+            bootstrap: tests/bootstrap.php
+            kernel:
+                environment: test

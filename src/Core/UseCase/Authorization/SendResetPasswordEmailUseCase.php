@@ -8,7 +8,6 @@ use App\Core\Domain\Common\Email\Entity\Enum\EmailTypeEnum;
 use App\Core\Domain\Common\Email\GetHelpEmailInterface;
 use App\Core\Domain\Common\Email\SendEmailInterface;
 use App\Core\Domain\Common\User\GetUserIdByEmailInterface;
-use Psr\Log\LoggerInterface;
 
 readonly class SendResetPasswordEmailUseCase
 {
@@ -17,10 +16,7 @@ readonly class SendResetPasswordEmailUseCase
         private MakeResetTokenByUserIdInterface $makeResetTokenByUserId,
         private EmailFactory $emailFactory,
         private SendEmailInterface $sendEmail,
-        private GetHelpEmailInterface $getHelpEmail,
-
-        // TODO
-        private LoggerInterface $logger
+        private GetHelpEmailInterface $getHelpEmail
     ) {
     }
 
@@ -38,10 +34,6 @@ readonly class SendResetPasswordEmailUseCase
                 type: EmailTypeEnum::resetToken,
                 context: compact('resetToken', 'helpEmail')
             )
-        );
-
-        $this->logger->debug(
-            $resetToken->getToken()
         );
     }
 }

@@ -4,12 +4,11 @@ namespace App\Core\Persistence\Action\Authorization\ResetToken;
 
 use App\Core\Domain\Authorization\ResetToken\Entity\ResetToken;
 use App\Core\Domain\Authorization\ResetToken\MakeResetTokenByUserIdInterface;
-use App\Core\Domain\Common\Exception\CriticalInterfaceException;
 use App\Core\Domain\Common\Exception\NotFoundInterfaceException;
 use App\Core\Persistence\Model\Authorization\ResetTokenModel;
 use App\Core\Persistence\Repository\Adapter\ResetTokenRepository;
 use App\Core\Persistence\Repository\UserRepository;
-use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
+use Throwable;
 
 readonly class MakeResetTokenByUserIdAction implements MakeResetTokenByUserIdInterface
 {
@@ -21,8 +20,7 @@ readonly class MakeResetTokenByUserIdAction implements MakeResetTokenByUserIdInt
     }
 
     /**
-     * @throws NotFoundInterfaceException
-     * @throws CriticalInterfaceException
+     * @throws Throwable
      */
     public function run(int $userId): ResetToken
     {
@@ -32,12 +30,14 @@ readonly class MakeResetTokenByUserIdAction implements MakeResetTokenByUserIdInt
             throw new NotFoundInterfaceException('Пользователь не найден');
         }
 
-        $token = $this->resetTokenRepository->getResetTokenByUser($user);
+        $tokenResult = $this->resetTokenRepository->getResetTokenByUser($user);
 
-        if (!$token) {
-            throw new CriticalInterfaceException('Не получилось получить токен');
+        if ($tokenResult->getException()) {
+            throw $tokenResult->getException();
         }
 
-        return $this->resetTokenModel->toDomain($token);
+        return $this->resetTokenModel->toDomain(
+            $tokenResult->getResetPasswordToken()
+        );
     }
 }

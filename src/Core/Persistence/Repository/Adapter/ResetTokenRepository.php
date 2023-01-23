@@ -2,9 +2,9 @@
 
 namespace App\Core\Persistence\Repository\Adapter;
 
+use App\Core\Persistence\Entity\Adapter\ResetTokenByUserResult;
 use App\Core\Persistence\Entity\User;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
-use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordToken;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
 readonly class ResetTokenRepository
@@ -14,13 +14,17 @@ readonly class ResetTokenRepository
     ) {
     }
 
-    public function getResetTokenByUser(User $user): ?ResetPasswordToken
+    public function getResetTokenByUser(User $user): ResetTokenByUserResult
     {
         try {
-            return $this->resetPasswordHelper->generateResetToken($user);
-        } catch (ResetPasswordExceptionInterface) {}
-
-        return null;
+            return new ResetTokenByUserResult(
+                resetPasswordToken: $this->resetPasswordHelper->generateResetToken($user)
+            );
+        } catch (ResetPasswordExceptionInterface $exception) {
+            return new ResetTokenByUserResult(
+                exception: $exception
+            );
+        }
     }
 
     public function isResetTokenIsValid(string $resetToken): bool

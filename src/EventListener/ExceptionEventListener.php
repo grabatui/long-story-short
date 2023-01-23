@@ -3,8 +3,9 @@
 namespace App\EventListener;
 
 use App\Core\Domain\Common\Exception\InterfaceException;
-use App\Http\Entity\Enum\ResponseTypeEnum;
-use App\Http\Exception\Request\ConstraintViolationsException;
+use App\Core\Presentation\Entity\Enum\ResponseTypeEnum;
+use App\Core\Presentation\Exception\Request\ConstraintViolationsException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -12,6 +13,9 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
+#[AsEventListener(
+    event: 'kernel.exception'
+)]
 class ExceptionEventListener
 {
     private const CONTENT_TYPE_HEADER_KEY = 'Content-Type';
@@ -58,8 +62,8 @@ class ExceptionEventListener
         $result = [
             'message' => $this->processExceptionMessage($exception),
             'type' => $this->isExceptionCanBeOutput($exception)
-                ? ResponseTypeEnum::output_error->name
-                : ResponseTypeEnum::error->name,
+                ? ResponseTypeEnum::output_error->value
+                : ResponseTypeEnum::error->value,
             'errors' => [],
         ];
 

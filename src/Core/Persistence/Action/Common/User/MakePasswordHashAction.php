@@ -5,7 +5,7 @@ namespace App\Core\Persistence\Action\Common\User;
 use App\Core\Domain\Common\User\MakePasswordHashInterface;
 use App\Core\Persistence\Repository\Adapter\HasherRepository;
 
-class MakePasswordHashAction implements MakePasswordHashInterface
+readonly class MakePasswordHashAction implements MakePasswordHashInterface
 {
     public function __construct(
         private readonly HasherRepository $hasherRepository
