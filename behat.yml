@@ -1,10 +1,15 @@
 default:
     suites:
-        default:
+        v1_user_getInit:
             paths:
-                - '%paths.base%/tests/Feature'
+                - '%paths.base%/tests/Feature/v1/User/GetInitTest'
             contexts:
                 - App\Tests\Feature\v1\User\GetInitTest\FeatureContext
+        v1_authorization_registration:
+            paths:
+                - '%paths.base%/tests/Feature/v1/Authorization/RegistrationTest'
+            contexts:
+                - App\Tests\Feature\v1\Authorization\RegistrationTest\FeatureContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension:

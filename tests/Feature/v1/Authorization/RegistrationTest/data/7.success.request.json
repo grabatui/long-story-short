@@ -1,0 +1,6 @@
+{
+  "name": "Test Name",
+  "email": "newUsername@test.test",
+  "password": "newPassword",
+  "password_repeat": "newPassword"
+}

@@ -65,6 +65,32 @@ trait RequestResponseTrait
     }
 
     /**
+     * @When мы делаем post-запрос в :path с данными из :dataPath
+     */
+    public function weDoPostRequestToPathWithDataFrom(string $path, string $dataPath): void
+    {
+        $filePath = implode('/', [
+            $this->getClassPath(),
+            trim($dataPath, '/')
+        ]);
+
+        if (!file_exists($filePath)) {
+            throw new RuntimeException(
+                sprintf('Файл "%s" не найден', $filePath)
+            );
+        }
+
+        $data = file_get_contents($filePath);
+
+        $server = ['CONTENT_TYPE' => 'application/json'];
+        if ($this->accessToken) {
+            $server['HTTP_AUTHORIZATION'] = sprintf('Bearer %s', $this->accessToken);
+        }
+
+        $this->crawler = $this->getClient()->xmlHttpRequest('POST', $path, [], [], $server, $data);
+    }
+
+    /**
      * @Then должен быть получен статус :status
      */
     public function shouldBeReceivedStatus(int $status): void
@@ -144,6 +170,45 @@ trait RequestResponseTrait
                 )
             );
         }
+    }
+
+    /**
+     * @Then в ответе есть ошибка поля :field с сообщением :message
+     */
+    public function thereIsErrorWithMessageInTheResponse(string $field, string $message): void
+    {
+        $data = json_decode($this->getClient()->getResponse()->getContent(), true);
+
+        if (!array_key_exists('errors', $data)) {
+            throw new RuntimeException('Ответ имеет невалидный формат');
+        }
+
+        $errors = $data['errors'];
+
+        if (empty($errors)) {
+            throw new RuntimeException('Ответ имеет невалидный формат');
+        }
+
+        foreach ($errors as $error) {
+            if ($error['path'] === $field) {
+                if ($error['message'] !== $message) {
+                    throw new RuntimeException(
+                        sprintf(
+                            'Сообщение ошибки поля "%s" не сходится: "%s" вместо "%s"',
+                            $field,
+                            $error['message'],
+                            $message
+                        )
+                    );
+                }
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(
+            sprintf('Ошибка "%s" не найдена', $field)
+        );
     }
 
     private function getEntityManager(): ConnectionRegistry

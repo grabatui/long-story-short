@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use Doctrine\ORM\Tools\SchemaTool;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use LogicException;
+use ReflectionClass;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -53,6 +54,15 @@ abstract class AbstractFeatureContext implements Context
     protected function getClient(): KernelBrowser
     {
         return self::$kernelBrowser;
+    }
+
+    protected function getClassPath(): string
+    {
+        $reflection = new ReflectionClass(get_called_class());
+
+        return dirname(
+            $reflection->getFileName()
+        );
     }
 
     private static function makeKernel(): KernelInterface
