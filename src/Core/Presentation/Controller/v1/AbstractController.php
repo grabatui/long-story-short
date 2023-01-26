@@ -19,7 +19,7 @@ abstract class AbstractController extends BaseAbstractController
     ): Response {
         return $this->json(
             array_merge(
-                ['error' => $message],
+                ['message' => $message],
                 $additionalData
             ),
             $status

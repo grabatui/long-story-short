@@ -7,5 +7,4 @@ use App\Tests\Feature\RequestResponseTrait;
 
 class FeatureContext extends AbstractFeatureContext
 {
-    use RequestResponseTrait;
 }

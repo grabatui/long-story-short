@@ -2,6 +2,7 @@
 
 namespace App\Tests\Feature;
 
+use App\Core\Persistence\Repository\UserRepository;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\Tools\SchemaTool;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -14,12 +15,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 abstract class AbstractFeatureContext implements Context
 {
+    use RequestResponseTrait;
+
     private static KernelInterface $kernel;
     private static KernelBrowser $kernelBrowser;
 
     public function __construct(
         protected JWTEncoderInterface $JWTEncoder,
-        protected UserPasswordHasherInterface $hasher
+        protected UserPasswordHasherInterface $hasher,
+        protected UserRepository $userRepository
     ) {}
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Tests\Feature;
 
 use App\Core\Persistence\Entity\User;
-use Doctrine\Persistence\ConnectionRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -20,7 +20,7 @@ trait RequestResponseTrait
     /**
      * @When в базе данных есть пользователь с email :email с паролем :password
      */
-    public function whenThereIsUserInDatabaseWithUsernameAndPassword(string $email, string $password): void
+    public function thereIsUserInDatabaseWithUsernameAndPassword(string $email, string $password): void
     {
         $user = new User();
         $user->setEmail($email);
@@ -29,7 +29,7 @@ trait RequestResponseTrait
         );
         $user->setName('Test Name');
 
-        $this->getEntityManager()->getRepository(User::class)->save($user, true);
+        $this->userRepository->save($user, true);
 
         $this->defaultUsername = $email;
         $this->defaultPassword = $password;
@@ -82,12 +82,7 @@ trait RequestResponseTrait
 
         $data = file_get_contents($filePath);
 
-        $server = ['CONTENT_TYPE' => 'application/json'];
-        if ($this->accessToken) {
-            $server['HTTP_AUTHORIZATION'] = sprintf('Bearer %s', $this->accessToken);
-        }
-
-        $this->crawler = $this->getClient()->xmlHttpRequest('POST', $path, [], [], $server, $data);
+        $this->doPostRequestWithData($path, $data);
     }
 
     /**
@@ -211,9 +206,29 @@ trait RequestResponseTrait
         );
     }
 
-    private function getEntityManager(): ConnectionRegistry
+    protected function getEntityManager(): ManagerRegistry
     {
         return $this->getKernel()->getContainer()->get('doctrine');
+    }
+
+    protected function doPostRequestWithData(string $path, array|string $data): void
+    {
+        $server = ['CONTENT_TYPE' => 'application/json'];
+        if ($this->accessToken) {
+            $server['HTTP_AUTHORIZATION'] = sprintf('Bearer %s', $this->accessToken);
+        }
+
+        $this->crawler = $this->getClient()
+            ->xmlHttpRequest('POST', $path, [], [], $server, is_array($data) ? json_encode($data) : $data);
+    }
+
+    protected function getDefaultUser(): ?User
+    {
+        if (!$this->defaultUsername) {
+            return null;
+        }
+
+        return $this->userRepository->findOneBy(['email' => $this->defaultUsername]);
     }
 
     private function processScalarValueFromString(string $value): string|int|bool|null

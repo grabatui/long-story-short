@@ -10,6 +10,11 @@ default:
                 - '%paths.base%/tests/Feature/v1/Authorization/RegistrationTest'
             contexts:
                 - App\Tests\Feature\v1\Authorization\RegistrationTest\FeatureContext
+        v1_authorization_check_reset_token:
+            paths:
+                - '%paths.base%/tests/Feature/v1/Authorization/CheckResetTokenTest'
+            contexts:
+                - App\Tests\Feature\v1\Authorization\CheckResetTokenTest\FeatureContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension:
