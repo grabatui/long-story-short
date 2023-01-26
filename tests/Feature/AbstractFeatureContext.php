@@ -10,6 +10,7 @@ use LogicException;
 use ReflectionClass;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -58,6 +59,11 @@ abstract class AbstractFeatureContext implements Context
     protected function getClient(): KernelBrowser
     {
         return self::$kernelBrowser;
+    }
+
+    protected function getContainer(): Container
+    {
+        return $this->getKernel()->getContainer()->get('test.service_container');
     }
 
     protected function getClassPath(): string

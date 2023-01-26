@@ -39,6 +39,8 @@ services:
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       JWT_PASSPHRASE: ${JWT_PASSPHRASE}
+      MAIL_DEFAULT_FROM: ${MAIL_DEFAULT_FROM}
+      MAIL_HELP_EMAIL: ${MAIL_HELP_EMAIL}
     volumes:
       - ./:/app
       - composer:/root/.composer/cache
