@@ -12,7 +12,7 @@ import DisabledButton from '../Form/DisabledButton';
 
 interface Properties extends BaseProperties {
     storeUserToken(token: string): void;
-    loadUser(): void;
+    loadUser(): Promise<any>;
 }
 interface State extends BaseState {
     email: string|null,
@@ -68,11 +68,12 @@ class LoginModal extends AbstractModalForm<Properties, State> {
             result,
             async (): Promise<any> => {
                 await this.props.storeUserToken(result.data.token);
-                await this.props.loadUser();
 
-                route('/profile', true);
+                await this.props.loadUser().then(() => {
+                    route('/profile', true);
 
-                this.props.closeModal();
+                    this.props.closeModal();
+                });
             }
         );
     }

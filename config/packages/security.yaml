@@ -1,7 +1,7 @@
 security:
     password_hashers:
         App\Core\Persistence\Entity\User:
-            algorithm: '%env(resolve:HASH_PASSWORD_ALGORITHM)%'
+            algorithm: 'auto'
     providers:
         app_user_provider:
             entity:

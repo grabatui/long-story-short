@@ -18,6 +18,7 @@ interface Properties extends StoreStateInterface {
     showModal(type: modalType): void;
     logout(): void;
     storeUserToken(token: string|null): void;
+    loadUser(): void;
 }
 interface State {
     isMainMenuOpen: boolean,
@@ -70,7 +71,7 @@ class Header extends Component<Properties, State> {
         this.props.showModal('registration');
         this.setState({isProfileMenuOpen: false});
     }
-    
+
     private logout(event: Event) {
         event.preventDefault();
 

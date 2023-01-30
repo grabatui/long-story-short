@@ -3,6 +3,7 @@
 namespace App\Core\Presentation\Controller\v1\Authorization;
 
 use App\Core\Presentation\Controller\v1\AbstractController;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,6 +16,6 @@ class LogoutController extends AbstractController
     public function __invoke(): Response
     {
         // Exists only for default security work
-        throw new \RuntimeException('What are you doing here?');
+        throw new RuntimeException('What are you doing here?');
     }
 }
