@@ -28,7 +28,9 @@ readonly class RegisterUserUseCase
 
         $this->registerUser->run(
             $user,
-            $this->makePasswordHash->run($user->getPassword())
+            $this->makePasswordHash->run(
+                $user->getPassword()
+            )
         );
     }
 }

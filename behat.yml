@@ -20,6 +20,11 @@ default:
                 - '%paths.base%/tests/Feature/v1/Authorization/SendResetPasswordTest'
             contexts:
                 - App\Tests\Feature\v1\Authorization\SendResetPasswordTest\FeatureContext
+        v1_authorization_change_password:
+            paths:
+                - '%paths.base%/tests/Feature/v1/Authorization/ChangePasswordTest'
+            contexts:
+                - App\Tests\Feature\v1\Authorization\ChangePasswordTest\FeatureContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension:

@@ -8,7 +8,7 @@ use App\Core\Persistence\Repository\Adapter\HasherRepository;
 readonly class MakePasswordHashAction implements MakePasswordHashInterface
 {
     public function __construct(
-        private readonly HasherRepository $hasherRepository
+        private HasherRepository $hasherRepository
     ) {
     }
 

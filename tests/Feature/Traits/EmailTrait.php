@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Feature;
+namespace App\Tests\Feature\Traits;
 
 use RuntimeException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;

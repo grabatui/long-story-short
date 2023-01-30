@@ -24,8 +24,6 @@ readonly class ChangeUserPasswordAction implements ChangeUserPasswordInterface
             throw new NotFoundInterfaceException('Пользователь не найден');
         }
 
-        $user->setPassword($hashedPassword);
-
-        $this->userRepository->save($user, true);
+        $this->userRepository->upgradePassword($user, $hashedPassword);
     }
 }

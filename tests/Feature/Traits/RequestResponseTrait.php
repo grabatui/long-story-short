@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Feature;
+namespace App\Tests\Feature\Traits;
 
 use App\Core\Persistence\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;

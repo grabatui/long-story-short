@@ -3,6 +3,7 @@
 namespace App\Tests\Feature;
 
 use App\Core\Persistence\Repository\UserRepository;
+use App\Tests\Feature\Traits\RequestResponseTrait;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\Tools\SchemaTool;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;

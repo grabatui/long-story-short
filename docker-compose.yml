@@ -19,6 +19,7 @@ services:
     build:
       context: ./docker/php-fpm/development
     environment:
+      HASH_PASSWORD_ALGORITHM: ${HASH_PASSWORD_ALGORITHM}
       MAIL_DEFAULT_FROM: ${MAIL_DEFAULT_FROM}
       MAIL_HELP_EMAIL: ${MAIL_HELP_EMAIL}
     volumes:
