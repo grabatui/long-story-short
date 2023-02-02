@@ -8,10 +8,11 @@ import {route} from 'preact-router';
 import {store} from '../../store';
 import {userActions} from '../../actions/userActions';
 import DisabledButton from '../Form/DisabledButton';
+import {AuthorizationDataInterface} from '../../types';
 
 
 interface Properties extends BaseProperties {
-    storeUserToken(token: string): void;
+    storeUserToken(token: AuthorizationDataInterface): void;
     loadUser(): Promise<any>;
 }
 interface State extends BaseState {
@@ -67,7 +68,7 @@ class LoginModal extends AbstractModalForm<Properties, State> {
         this.processResponse(
             result,
             async (): Promise<any> => {
-                await this.props.storeUserToken(result.data.token);
+                await this.props.storeUserToken(result.data);
 
                 await this.props.loadUser().then(() => {
                     route('/profile', true);

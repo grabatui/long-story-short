@@ -1,14 +1,21 @@
 import {Component} from 'preact';
+import PageWrapper from '../components/Wrapper/PageWrapper';
+import SearchInput from '../components/Form/Search/SearchInput';
 
 
-type Properties = {}
-type State = {}
+interface Properties {}
+interface State {}
 
 
 export default class Series extends Component<Properties, State> {
     render() {
         return (
-            <div>Hello series page!</div>
+            <PageWrapper type={'full'}>
+                <form class="py-6">
+                    {/* @ts-ignore */}
+                    <SearchInput strictType={'series'} />
+                </form>
+            </PageWrapper>
         );
     }
 }

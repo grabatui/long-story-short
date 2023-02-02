@@ -49,7 +49,7 @@ abstract class AbstractFeatureContext implements Context
 
         $schemaTool = new SchemaTool($entityManager);
         $schemaTool->dropSchema($metaData);
-        $schemaTool->updateSchema($metaData);
+        $schemaTool->updateSchema($metaData, true);
     }
 
     protected function getKernel(): KernelInterface

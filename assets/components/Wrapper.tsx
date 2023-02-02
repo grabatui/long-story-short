@@ -3,11 +3,14 @@ import {userActions} from '../actions/userActions';
 import {Component} from 'preact';
 import {StoreStateInterface} from '../types';
 import Loader from './Loader';
+import {store} from '../store';
+import {mainActions} from "../actions/mainActions";
 
 
 interface Properties extends StoreStateInterface {
     loadUserToken(): void;
     loadUser(): void;
+    loadInit(): void;
 }
 interface State {
     isInitiated: boolean,
@@ -38,6 +41,7 @@ class Wrapper extends Component<Properties, State> {
 
         return Promise.all([
             await this.props.loadUser(),
+            await this.props.loadInit(),
         ]);
     }
 
@@ -51,4 +55,4 @@ class Wrapper extends Component<Properties, State> {
 }
 
 
-export default connect([], userActions)(Wrapper);
+export default connect([], {...userActions(store), ...mainActions(store)})(Wrapper);

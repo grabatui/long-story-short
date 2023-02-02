@@ -1,8 +1,8 @@
 import {Component} from 'preact';
 
 
-type Properties = {}
-type State = {}
+interface Properties {}
+interface State {}
 
 
 export default class Error404 extends Component<Properties, State> {

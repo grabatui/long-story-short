@@ -5,5 +5,5 @@ controllers:
 v1_authorization_login:
     path: /api/v1/authorization/login
 
-# api_refresh_token:
-#    path: /api/v1/refresh_token
+v1_authorization_refresh_token:
+    path: /api/v1/authorization/refresh_token

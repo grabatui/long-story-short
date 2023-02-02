@@ -6,15 +6,27 @@ export interface UserInterface {
     type: 'unauthorized'|'authorized'
 }
 
-export interface StoreStateInterface {
-    token: string|null,
-    user: UserInterface|null,
-    shownModal: modalType|null
+export interface SearchTypeInterface {
+    type: string,
+    title: string,
+    placeholder: string,
 }
 
-export interface AuthorizedInterface {
-    id: number,
-    token: string
+export interface InitDataInterface {
+    search_types: SearchTypeInterface[]
+}
+
+export interface StoreStateInterface {
+    token: AuthorizationDataInterface|null,
+    user: UserInterface|null,
+    shownModal: modalType|null,
+    initData: InitDataInterface|null,
+}
+
+export interface AuthorizationDataInterface {
+    token: string,
+    refresh_token: string,
+    refresh_token_expired_at: number
 }
 
 export interface ResponseResultError {

@@ -9,7 +9,8 @@ const initialState: StoreStateInterface = {
         id: null,
         type: 'unauthorized',
     },
-    shownModal: null
+    shownModal: null,
+    initData: null
 };
 
 

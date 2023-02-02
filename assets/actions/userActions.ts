@@ -1,26 +1,35 @@
 import {Store} from 'unistore';
-import {DefaultResponseResult, StoreStateInterface, UserInterface} from '../types';
+import {AuthorizationDataInterface, DefaultResponseResult, StoreStateInterface, UserInterface} from '../types';
 import {getUser, logout} from '../repository/user';
-import {getCookie, removeCookie, setCookie} from 'typescript-cookie';
+import {getCookie} from 'typescript-cookie';
+import {setTokenToCookie} from '../helpers';
 
 
 type userActionsType = {
     loadUserToken(state: StoreStateInterface): void;
-    storeUserToken(state: StoreStateInterface, token: string|null): void;
+    storeUserToken(state: StoreStateInterface, token: AuthorizationDataInterface|null): void;
     loadUser(state: StoreStateInterface): Promise<any>;
     logout(state: StoreStateInterface): void;
 };
 
 export const userActions = (store: Store<StoreStateInterface>): userActionsType => ({
     loadUserToken(state: StoreStateInterface): void {
-        store.setState({token: getCookie('jwt_token')})
-    },
-    storeUserToken(state: StoreStateInterface, token: string|null): void {
-        if (!token) {
-            removeCookie('jwt_token');
-        } else {
-            setCookie('jwt_token', token);
+        let tokenData: any = getCookie('jwt_token');
+
+        if (tokenData) {
+            try {
+                tokenData = JSON.parse(tokenData);
+            } catch (error) {
+                tokenData = null;
+            }
         }
+
+        if (tokenData) {
+            store.setState({token: tokenData})
+        }
+    },
+    storeUserToken(state: StoreStateInterface, token: AuthorizationDataInterface|null): void {
+        setTokenToCookie(token);
 
         store.setState({token: token});
     },

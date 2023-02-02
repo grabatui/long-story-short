@@ -1,18 +1,5 @@
-import {AuthorizedInterface, DefaultResponseResult, UserInterface} from '../types';
-
-
-const makeDefaultApiHeaders = (token?: string|null): any => {
-    const headers: any = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    };
-
-    if (token) {
-        headers['Authorization'] = 'Bearer ' + token;
-    }
-
-    return headers;
-};
+import {AuthorizationDataInterface, DefaultResponseResult, UserInterface} from '../types';
+import {makeDefaultApiHeaders, refreshTokenAndRedoAction} from './helpers';
 
 
 export const register = async (
@@ -33,11 +20,23 @@ export const register = async (
 export const login = async (
     email: string,
     password: string
-): Promise<DefaultResponseResult<AuthorizedInterface>> => {
+): Promise<DefaultResponseResult<AuthorizationDataInterface>> => {
     return await fetch('/api/v1/authorization/login', {
         method: 'POST',
         headers: makeDefaultApiHeaders(),
         body: JSON.stringify({username: email, password}),
+        mode: 'cors'
+    })
+        .then((response) => response.json());
+}
+
+export const refreshToken = async (
+    refreshToken: string
+): Promise<DefaultResponseResult<AuthorizationDataInterface>> => {
+    return await fetch('/api/v1/authorization/refresh_token', {
+        method: 'POST',
+        headers: makeDefaultApiHeaders(),
+        body: JSON.stringify({refresh_token: refreshToken}),
         mode: 'cors'
     })
         .then((response) => response.json());
@@ -55,18 +54,32 @@ export const sendRestorePassword = async (
         .then((response) => response.json());
 };
 
-export const getUser = async (token: string): Promise<DefaultResponseResult<UserInterface>> => {
-    return await fetch('/api/v1/user/init', {headers: makeDefaultApiHeaders(token)})
-        .then((response) => response.json());
+export const getUser = async (token: AuthorizationDataInterface): Promise<DefaultResponseResult<UserInterface>> => {
+    return await fetch('/api/v1/user/init', {headers: makeDefaultApiHeaders(token.token)})
+        .then((response) => response.json())
+        .then(
+            (response: DefaultResponseResult<UserInterface>) => refreshTokenAndRedoAction(
+                token,
+                response,
+                (token: AuthorizationDataInterface) => getUser(token)
+            )
+        );
 };
 
-export const logout = async (token: string): Promise<DefaultResponseResult<object>> => {
+export const logout = async (token: AuthorizationDataInterface): Promise<DefaultResponseResult<object>> => {
     return await fetch('/api/v1/authorization/logout', {
         method: 'POST',
-        headers: makeDefaultApiHeaders(token),
+        headers: makeDefaultApiHeaders(token.token),
         mode: 'cors'
     })
-        .then((response) => response.json());
+        .then((response) => response.json())
+        .then(
+            (response: DefaultResponseResult<object>) => refreshTokenAndRedoAction(
+                token,
+                response,
+                (token: AuthorizationDataInterface) => logout(token)
+            )
+        );
 };
 
 export const checkResetToken = async (reset_token: string): Promise<DefaultResponseResult<object>> => {

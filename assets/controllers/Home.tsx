@@ -1,14 +1,20 @@
 import {Component} from 'preact';
+import SearchInput from "../components/Form/Search/SearchInput";
+import PageWrapper from "../components/Wrapper/PageWrapper";
 
 
-type Properties = {}
-type State = {}
+interface Properties {}
+interface State {}
 
 
 export default class Home extends Component<Properties, State> {
     render() {
         return (
-            <div>Hello home page!</div>
+            <PageWrapper type={'full'}>
+                <form class="py-6">
+                    <SearchInput />
+                </form>
+            </PageWrapper>
         );
     }
 }

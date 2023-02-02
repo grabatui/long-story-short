@@ -6,7 +6,7 @@ import Bars3Icon from './Icon/Bars3Icon';
 import ProfileIcon from './Icon/ProfileIcon';
 import {classNames} from '../helpers';
 import OutsideClickWrapper from './Wrapper/OutsideClickWrapper';
-import {StoreStateInterface} from '../types';
+import {AuthorizationDataInterface, StoreStateInterface} from '../types';
 import Loader from './Loader';
 import {modalActions, modalType} from '../actions/modalActions';
 import {userActions} from '../actions/userActions';
@@ -17,7 +17,7 @@ import {route} from 'preact-router';
 interface Properties extends StoreStateInterface {
     showModal(type: modalType): void;
     logout(): void;
-    storeUserToken(token: string|null): void;
+    storeUserToken(token: AuthorizationDataInterface|null): void;
     loadUser(): void;
 }
 interface State {

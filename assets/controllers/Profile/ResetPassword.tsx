@@ -5,8 +5,8 @@ import DisabledButton from '../../components/Form/DisabledButton';
 import PageWrapper from '../../components/Wrapper/PageWrapper';
 import {changeUserPassword, checkResetToken} from '../../repository/user';
 import {route} from 'preact-router';
-import SuccessModal from "../../components/Modal/SuccessModal";
-import {modalActions, modalType} from "../../actions/modalActions";
+import SuccessModal from '../../components/Modal/SuccessModal';
+import {modalActions, modalType} from '../../actions/modalActions';
 
 
 interface Properties extends BaseProperties {
