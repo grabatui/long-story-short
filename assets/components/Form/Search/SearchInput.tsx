@@ -11,6 +11,7 @@ interface Properties extends StoreStateInterface {
 interface State {
     type?: SearchTypeInterface,
     isTypeSelectShown: boolean,
+    searchValue: string|null,
 }
 
 
@@ -21,6 +22,7 @@ class SearchInput extends Component<Properties, State> {
         this.state = {
             type: this.resolveInitType(),
             isTypeSelectShown: false,
+            searchValue: null,
         };
     }
 
@@ -52,6 +54,18 @@ class SearchInput extends Component<Properties, State> {
 
     private closeTypeSelect() {
         this.setState({isTypeSelectShown: false});
+    }
+
+    private onSelectInput(event: Event) {
+        const target = event.currentTarget;
+
+        if (!(target instanceof HTMLInputElement)) {
+            return;
+        }
+
+        this.setState({searchValue: target.value});
+
+        // TODO: Start search
     }
 
     render() {
@@ -112,6 +126,8 @@ class SearchInput extends Component<Properties, State> {
                                 : 'rounded-r-lg border-l-gray-50 border-l-2 dark:border-l-gray-700'
                         ])}
                         placeholder={this.state.type.placeholder}
+                        value={this.state.searchValue}
+                        onInput={(event:Event) => this.onSelectInput}
                         required
                     />
 
