@@ -26,6 +26,9 @@ project-migrations:
 project-test-migrations:
 	docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate --env=test --quiet
 
+project-make-migrations:
+	docker-compose run --rm php-cli php bin/console doctrine:migrations:diff
+
 docker-up:
 	docker-compose up -d
 
