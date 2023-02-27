@@ -11,6 +11,7 @@ enum EntityStaffTypeEnum: string
     case composer = 'composer';
     case artist = 'artist';
     case montage = 'montage';
+    case producer = 'producer';
 
     public function getTitle(): string
     {
@@ -22,6 +23,7 @@ enum EntityStaffTypeEnum: string
             self::composer => 'Композитор',
             self::artist => 'Художник',
             self::montage => 'Монтаж',
+            self::producer => 'Продюсер',
         };
     }
 }

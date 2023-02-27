@@ -4,7 +4,6 @@ namespace App\Core\Presentation\Controller\Admin;
 
 use App\Core\Persistence\Entity\MovieStaff;
 use App\Core\Presentation\Entity\Enum\EntityStaffTypeEnum;
-use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;

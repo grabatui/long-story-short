@@ -9,8 +9,13 @@ use App\Core\Presentation\Provider\Admin\GenreProvider;
 use App\Core\Presentation\Provider\Admin\MovieStaffProvider;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
@@ -42,8 +47,26 @@ class MovieCrudController extends AbstractCrudController
                 static fn (?Movie $movie, ?string $pageName): string => $movie ? $movie->__toString() : 'Фильм'
             )
 
-            ->setSearchFields(['title', 'original_title'])
+            ->setSearchFields(['title', 'originalTitle'])
             ->setDefaultSort(['title' => 'DESC']);
+    }
+
+    public function createIndexQueryBuilder(
+        SearchDto $searchDto,
+        EntityDto $entityDto,
+        FieldCollection $fields,
+        FilterCollection $filters
+    ): QueryBuilder {
+        $queryBuilder = parent::createIndexQueryBuilder(
+            $searchDto,
+            $entityDto,
+            $fields,
+            $filters
+        );
+
+        $queryBuilder->andWhere('entity.deletedAt is null');
+
+        return $queryBuilder;
     }
 
     public function configureFields(string $pageName): iterable
@@ -53,8 +76,10 @@ class MovieCrudController extends AbstractCrudController
         yield TextField::new('title', 'Заголовок')
             ->setRequired(true);
         yield TextField::new('original_title', 'Заголовок (ориг.)');
-        yield DateField::new('premiered_at', 'Премьера');
-        yield IntegerField::new('duration_in_minutes', 'Продолжительность (мин.)');
+        yield DateField::new('premiered_at', 'Премьера')
+            ->setRequired(true);
+        yield IntegerField::new('duration_in_minutes', 'Продолжительность (мин.)')
+            ->setRequired(true);
 
         yield FormField::addPanel('Дополнительная информация');
         yield ChoiceField::new('countries', 'Страны')
@@ -68,20 +93,31 @@ class MovieCrudController extends AbstractCrudController
 
         yield CollectionField::new('staffItems', 'Съемочная группа')
             ->useEntryCrudForm(MovieStaffItemCrudController::class)
-            ->setRequired(true);
+            ->setRequired(true)
+            ->hideOnIndex();
 
         yield DateTimeField::new('created_at', 'Дата создания')->hideOnForm();
         yield DateTimeField::new('updated_at', 'Дата обновления')->hideOnForm();
-        yield DateTimeField::new('deleted_at', 'Дата удаления')->hideOnForm();
     }
 
-    public function createEntity(string $entityFqcn): Movie
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $entity = new Movie();
-        $entity->setCreatedAt(new DateTime());
-        $entity->setUpdatedAt(new DateTime());
+        $createdAt = new DateTime();
 
-        return $entity;
+        $entityInstance->setCreatedAt($createdAt);
+        $entityInstance->setUpdatedAt($createdAt);
+
+        if (!$entityInstance->getStaffItems()->isEmpty()) {
+            /** @var MovieStaff $staffItem */
+            foreach ($entityInstance->getStaffItems() as $staffItem) {
+                $staffItem->setMovie($entityInstance);
+
+                $staffItem->setCreatedAt($createdAt);
+                $staffItem->setUpdatedAt($createdAt);
+            }
+        }
+
+        parent::persistEntity($entityManager, $entityInstance);
     }
 
     /**
@@ -131,6 +167,18 @@ class MovieCrudController extends AbstractCrudController
         }
 
         parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param Movie $entityInstance
+     * @return void
+     */
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $entityInstance->setDeletedAt(new DateTime());
+
+        $entityManager->flush();
     }
 
     /**
