@@ -22,8 +22,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class MovieCrudController extends AbstractCrudController
 {
@@ -83,6 +85,13 @@ class MovieCrudController extends AbstractCrudController
             ->setSortable(true);
         yield IntegerField::new('durationInMinutes', 'Продолжительность (мин.)')
             ->setRequired(true);
+
+        yield TextField::new('poster', 'Постер')
+            ->setFormType(VichImageType::class)
+            ->onlyOnForms();
+        yield ImageField::new('posterName', 'Постер')
+            ->onlyOnIndex()
+            ->setBasePath('/images/posters');
 
         yield FormField::addPanel('Дополнительная информация');
         yield ChoiceField::new('countries', 'Страны')

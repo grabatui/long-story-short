@@ -3,14 +3,18 @@
 namespace App\Core\Persistence\Entity;
 
 use App\Core\Persistence\Repository\MovieRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 #[ORM\Table(name: '`movies`')]
+#[Vich\Uploadable]
 class Movie
 {
     use TimestampableEntity;
@@ -44,12 +48,21 @@ class Movie
     #[ORM\Column(type: 'date', nullable: true)]
     private ?DateTimeInterface $deletedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $posterName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $posterSize = null;
+
     #[ORM\OneToMany(
         mappedBy: 'movie',
         targetEntity: MovieStaff::class,
         cascade: ['all']
     )]
     private Collection $staffItems;
+
+    #[Vich\UploadableField(mapping: 'posters', fileNameProperty: 'posterName', size: 'posterSize')]
+    private ?File $poster = null;
 
     public function __construct()
     {
@@ -150,6 +163,26 @@ class Movie
         $this->deletedAt = $deletedAt;
     }
 
+    public function getPosterName(): ?string
+    {
+        return $this->posterName;
+    }
+
+    public function setPosterName(?string $posterName): void
+    {
+        $this->posterName = $posterName;
+    }
+
+    public function getPosterSize(): ?int
+    {
+        return $this->posterSize;
+    }
+
+    public function setPosterSize(?int $posterSize): void
+    {
+        $this->posterSize = $posterSize;
+    }
+
     public function getStaffItems(): Collection
     {
         return $this->staffItems;
@@ -158,5 +191,19 @@ class Movie
     public function setStaffItems(Collection $staffItems): void
     {
         $this->staffItems = $staffItems;
+    }
+
+    public function setPoster(?File $poster): void
+    {
+        $this->poster = $poster;
+
+        if ($poster) {
+            $this->setUpdatedAt(new DateTime());
+        }
+    }
+
+    public function getPoster(): ?File
+    {
+        return $this->poster;
     }
 }
