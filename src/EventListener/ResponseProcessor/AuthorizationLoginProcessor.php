@@ -2,6 +2,7 @@
 
 namespace App\EventListener\ResponseProcessor;
 
+use App\Core\Presentation\Entity\Enum\ResponseTypeEnum;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthorizationLoginProcessor extends AbstractProcessor
@@ -18,5 +19,10 @@ class AuthorizationLoginProcessor extends AbstractProcessor
         $response->setContent(
             json_encode($this->wrapData($data))
         );
+    }
+
+    public function getErrorType(): ResponseTypeEnum
+    {
+        return ResponseTypeEnum::output_error;
     }
 }

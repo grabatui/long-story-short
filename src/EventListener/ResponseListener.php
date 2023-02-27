@@ -56,9 +56,9 @@ readonly class ResponseListener implements EventSubscriberInterface
 
         $response->setContent(
             json_encode([
-                'message' => $isSuccess ? null : ($data['message'] ?? null),
+                'message' => $isSuccess ? null : ($data['message'] ?? $data['data']['message'] ?? null),
                 'data' => $isSuccess ? $data : [],
-                'type' => ResponseTypeEnum::error->value,
+                'type' => $responseProcessor?->getErrorType()?->value ?: ResponseTypeEnum::error->value,
                 'errors' => [],
             ])
         );

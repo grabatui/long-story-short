@@ -23,6 +23,16 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
+        admin:
+            pattern: ^/admin
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\AdminAuthenticator
+            logout:
+                path: admin_logout
+                target: admin_login
+            access_denied_handler: App\Security\AdminAccessDeniedHandler
+
         main:
             lazy: true
             provider: app_user_provider
@@ -36,7 +46,9 @@ security:
     access_control:
         - { path: ^/api/v(\d+)/authorization/(login|register|restore_password|check_reset_token|change_password|refresh_token), roles: PUBLIC_ACCESS }
         - { path: ^/api/v(\d+)/init, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/(login|logout), roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:

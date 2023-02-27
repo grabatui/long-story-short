@@ -2,6 +2,7 @@
 
 namespace App\Core\Persistence\Entity;
 
+use App\Core\Persistence\Entity\Enum\UserRoleEnum;
 use App\Core\Persistence\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -80,7 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
 
-        $roles[] = 'ROLE_USER';
+        $roles[] = UserRoleEnum::user->value;
 
         return array_unique($roles);
     }

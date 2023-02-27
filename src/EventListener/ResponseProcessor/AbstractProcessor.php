@@ -13,4 +13,9 @@ abstract class AbstractProcessor implements ProcessorInterface
             'type' => ResponseTypeEnum::success->value,
         ];
     }
+
+    public function getErrorType(): ResponseTypeEnum
+    {
+        return ResponseTypeEnum::error;
+    }
 }
