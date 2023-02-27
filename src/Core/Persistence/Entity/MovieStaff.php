@@ -2,6 +2,7 @@
 
 namespace App\Core\Persistence\Entity;
 
+use App\Core\Persistence\Entity\Enum\EntityStaffTypeEnum;
 use App\Core\Persistence\Repository\MovieStaffRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -28,7 +29,9 @@ class MovieStaff
 
     public function __toString(): string
     {
-        return sprintf('%s %s', $this->getType(), $this->getTitle());
+        $typeTitle = EntityStaffTypeEnum::from($this->getType());
+
+        return sprintf('%s %s', $typeTitle->getTitle(), $this->getTitle());
     }
 
     public function getId(): ?int

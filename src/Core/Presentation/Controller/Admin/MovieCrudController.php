@@ -48,7 +48,7 @@ class MovieCrudController extends AbstractCrudController
             )
 
             ->setSearchFields(['title', 'originalTitle'])
-            ->setDefaultSort(['title' => 'DESC']);
+            ->setDefaultSort(['title' => 'ASC']);
     }
 
     public function createIndexQueryBuilder(
@@ -71,33 +71,42 @@ class MovieCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield IdField::new('id')->hideOnForm();
+        yield IdField::new('id')
+            ->hideOnForm();
 
         yield TextField::new('title', 'Заголовок')
             ->setRequired(true);
-        yield TextField::new('original_title', 'Заголовок (ориг.)');
-        yield DateField::new('premiered_at', 'Премьера')
-            ->setRequired(true);
-        yield IntegerField::new('duration_in_minutes', 'Продолжительность (мин.)')
+        yield TextField::new('originalTitle', 'Заголовок (ориг.)')
+            ->setSortable(true);
+        yield DateField::new('premieredAt', 'Премьера')
+            ->setRequired(true)
+            ->setSortable(true);
+        yield IntegerField::new('durationInMinutes', 'Продолжительность (мин.)')
             ->setRequired(true);
 
         yield FormField::addPanel('Дополнительная информация');
         yield ChoiceField::new('countries', 'Страны')
             ->allowMultipleChoices()
             ->autocomplete()
-            ->setChoices($this->getCountries());
+            ->setChoices($this->getCountries())
+            ->setSortable(false);
         yield ChoiceField::new('genres', 'Жанры')
             ->allowMultipleChoices()
             ->autocomplete()
-            ->setChoices($this->getGenres());
+            ->setChoices($this->getGenres())
+            ->setSortable(false);
 
         yield CollectionField::new('staffItems', 'Съемочная группа')
             ->useEntryCrudForm(MovieStaffItemCrudController::class)
             ->setRequired(true)
             ->hideOnIndex();
 
-        yield DateTimeField::new('created_at', 'Дата создания')->hideOnForm();
-        yield DateTimeField::new('updated_at', 'Дата обновления')->hideOnForm();
+        yield DateTimeField::new('createdAt', 'Дата создания')
+            ->hideOnForm()
+            ->setSortable(true);
+        yield DateTimeField::new('updatedAt', 'Дата обновления')
+            ->hideOnForm()
+            ->setSortable(true);
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
