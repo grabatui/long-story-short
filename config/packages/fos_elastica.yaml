@@ -1,0 +1,13 @@
+fos_elastica:
+    clients:
+        default: { url: '%env(ELASTICSEARCH_URL)%' }
+    indexes:
+        movies:
+            properties:
+                title: ~
+                originalTitle: ~
+            persistence:
+                driver: orm
+                model: App\Core\Persistence\Entity\Movie
+                provider: ~
+                finder: ~
