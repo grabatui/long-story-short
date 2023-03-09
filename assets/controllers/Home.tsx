@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import SearchInput from "../components/Form/Search/SearchInput";
+import EntitySearchInput from "../components/Form/Search/EntitySearchInput";
 import PageWrapper from "../components/Wrapper/PageWrapper";
 
 
@@ -12,7 +12,7 @@ export default class Home extends Component<Properties, State> {
         return (
             <PageWrapper type={'full'}>
                 <form class="py-6">
-                    <SearchInput />
+                    <EntitySearchInput />
                 </form>
             </PageWrapper>
         );

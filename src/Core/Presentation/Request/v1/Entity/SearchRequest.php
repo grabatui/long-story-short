@@ -16,6 +16,7 @@ class SearchRequest extends AbstractRequest
                     'required',
                     'in:' . $this->getSearchTypes(),
                 ],
+                'term' => 'required|max:100',
             ],
         ]);
     }
@@ -23,6 +24,11 @@ class SearchRequest extends AbstractRequest
     public function getType(): string
     {
         return $this->getRequest()->request->get('type');
+    }
+
+    public function getTerm(): string
+    {
+        return $this->getRequest()->request->get('term');
     }
 
     private function getSearchTypes(): string

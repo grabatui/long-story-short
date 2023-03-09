@@ -33,6 +33,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "country-flag-icons": "^1.5.5",
         "typescript-cookie": "^1.0.4"
     }
 }

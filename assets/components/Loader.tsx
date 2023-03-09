@@ -1,8 +1,10 @@
 import {Component} from 'preact';
+import {classNames} from "../helpers";
 
 
 type Properties = {
-    size?: number
+    size?: number,
+    fullScreen?: boolean
 };
 type State = {};
 
@@ -10,7 +12,12 @@ type State = {};
 class Loader extends Component<Properties, State> {
     render() {
         return (
-            <div className="grid place-items-center h-screen">
+            <div
+                className={classNames([
+                    'grid place-items-center',
+                    this.props.fullScreen ? 'h-screen' : null
+                ])}
+            >
                 <div role="status">
                     <svg
                         className={'inline mr-2 w-' + this.props.size + ' h-' + this.props.size + ' text-gray-200 animate-spin dark:text-gray-600 fill-blue-600'}
@@ -35,6 +42,9 @@ class Loader extends Component<Properties, State> {
     }
 }
 
-Loader.defaultProps = {size: 8};
+Loader.defaultProps = {
+    size: 8,
+    fullScreen: true
+};
 
 export default Loader;

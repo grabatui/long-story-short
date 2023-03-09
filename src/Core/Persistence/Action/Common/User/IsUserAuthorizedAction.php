@@ -3,17 +3,17 @@
 namespace App\Core\Persistence\Action\Common\User;
 
 use App\Core\Domain\Common\User\IsUserAuthorizedInterface;
-use Symfony\Component\Security\Core\Security;
+use App\Core\Persistence\Repository\Adapter\SecurityRepository;
 
-class IsUserAuthorizedAction implements IsUserAuthorizedInterface
+readonly class IsUserAuthorizedAction implements IsUserAuthorizedInterface
 {
     public function __construct(
-        private readonly Security $security
+        private SecurityRepository $securityRepository
     ) {
     }
 
     public function is(): bool
     {
-        return (bool) $this->security->getUser();
+        return (bool) $this->securityRepository->getUser();
     }
 }

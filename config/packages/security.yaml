@@ -46,6 +46,7 @@ security:
     access_control:
         - { path: ^/api/v(\d+)/authorization/(login|register|restore_password|check_reset_token|change_password|refresh_token), roles: PUBLIC_ACCESS }
         - { path: ^/api/v(\d+)/init, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v(\d+)/entity/search, roles: PUBLIC_ACCESS }
         - { path: ^/admin/(login|logout), roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: ROLE_ADMIN }

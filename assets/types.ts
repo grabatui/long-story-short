@@ -41,3 +41,18 @@ export interface DefaultResponseResult<DataType> {
     errors: Array<ResponseResultError>,
     data: DataType|null
 }
+
+export interface EntityInterface {
+    id: number,
+    title: string,
+    original_title: string|null,
+    poster: string,
+    url: string,
+    premiered_year: string
+    countries: string[],
+    genres: string[]
+}
+
+export interface EntitiesInterface {
+    items: EntityInterface[]
+}

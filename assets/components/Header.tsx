@@ -42,8 +42,8 @@ const LINKS: LinkItemType[] = [
         text: 'Главная',
     },
     {
-        url: '/series',
-        text: 'Сериалы',
+        url: '/movies',
+        text: 'Фильмы',
     },
 ];
 
