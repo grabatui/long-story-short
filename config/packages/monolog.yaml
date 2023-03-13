@@ -2,9 +2,17 @@ monolog:
     channels:
         - deprecation
 
+sentry:
+    register_error_listener: false
+    register_error_handler: false
+
 when@dev:
     monolog:
         handlers:
+            sentry:
+                type: sentry
+                level: !php/const Monolog\Logger::ERROR
+                hub_id: Sentry\State\HubInterface
             main:
                 type: rotating_file
                 path: "%kernel.logs_dir%/%kernel.environment%.log"

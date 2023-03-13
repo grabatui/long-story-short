@@ -16,6 +16,7 @@
         "gedmo/doctrine-extensions": "^3.11",
         "gesdinet/jwt-refresh-token-bundle": "^1.1",
         "lexik/jwt-authentication-bundle": "^2.16",
+        "sentry/sentry-symfony": "^4.6",
         "symfony-bundles/json-request-bundle": "^4.1",
         "symfony/console": "^6.1",
         "symfony/dotenv": "^6.1",
