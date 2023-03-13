@@ -10,7 +10,9 @@ RUN curl -sS -o /tmp/icu.tar.gz -L https://github.com/unicode-org/icu/releases/d
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install pdo pdo_pgsql pgsql intl \
+    && docker-php-ext-install pdo pdo_pgsql pgsql intl opcache \
     && docker-php-ext-enable pdo_pgsql intl
+
+COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 WORKDIR /app
