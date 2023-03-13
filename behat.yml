@@ -5,6 +5,7 @@ default:
                 - '%paths.base%/tests/Feature/v1/User/GetInitTest'
             contexts:
                 - App\Tests\Feature\v1\User\GetInitTest\FeatureContext
+
         v1_authorization_registration:
             paths:
                 - '%paths.base%/tests/Feature/v1/Authorization/RegistrationTest'
@@ -25,6 +26,12 @@ default:
                 - '%paths.base%/tests/Feature/v1/Authorization/ChangePasswordTest'
             contexts:
                 - App\Tests\Feature\v1\Authorization\ChangePasswordTest\FeatureContext
+
+        v1_entity_search:
+            paths:
+                - '%paths.base%/tests/Feature/v1/Entity/SearchTest'
+            contexts:
+                - App\Tests\Feature\v1\Entity\SearchTest\FeatureContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension:

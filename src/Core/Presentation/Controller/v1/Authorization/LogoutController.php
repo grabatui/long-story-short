@@ -11,7 +11,8 @@ class LogoutController extends AbstractController
 {
     #[Route(
         '/api/v1/authorization/logout',
-        name: 'v1_authorization_logout'
+        name: 'v1_authorization_logout',
+        methods: ['POST']
     )]
     public function __invoke(): Response
     {

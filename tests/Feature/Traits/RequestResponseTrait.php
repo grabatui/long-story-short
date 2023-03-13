@@ -4,6 +4,7 @@ namespace App\Tests\Feature\Traits;
 
 use App\Core\Persistence\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
+use JsonException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
@@ -52,11 +53,25 @@ trait RequestResponseTrait
     }
 
     /**
+     * @When мы делаем get-запрос в :path с данными :data
+     */
+    public function weDoGetRequestWithQueryToPath(string $path, string $jsonData): void
+    {
+        try {
+            $jsonData = json_decode($jsonData, true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            throw new RuntimeException('Невалидный json в данных');
+        }
+
+        $this->weDoGetRequestToPath($path . '?' . http_build_query($jsonData));
+    }
+
+    /**
      * @When мы делаем get-запрос в :path
      */
     public function weDoGetRequestToPath(string $path): void
     {
-        $server = [];
+        $server = ['CONTENT_TYPE' => 'application/json'];
         if ($this->accessToken) {
             $server['HTTP_AUTHORIZATION'] = sprintf('Bearer %s', $this->accessToken);
         }
@@ -69,18 +84,7 @@ trait RequestResponseTrait
      */
     public function weDoPostRequestToPathWithDataFrom(string $path, string $dataPath): void
     {
-        $filePath = implode('/', [
-            $this->getClassPath(),
-            trim($dataPath, '/')
-        ]);
-
-        if (!file_exists($filePath)) {
-            throw new RuntimeException(
-                sprintf('Файл "%s" не найден', $filePath)
-            );
-        }
-
-        $data = file_get_contents($filePath);
+        $data = $this->getAndCheckDataFilePath($dataPath);
 
         $this->doPostRequestWithData($path, $data);
     }
@@ -152,15 +156,14 @@ trait RequestResponseTrait
 
         $data = $data['data'];
 
-        if (
-            !array_key_exists($field, $data)
-            || $data[$field] != $this->processScalarValueFromString($value)
-        ) {
+        $dataValue = $this->receiveValueFromDataByField($field, $data);
+
+        if ($dataValue != $this->processScalarValueFromString($value)) {
             throw new RuntimeException(
                 sprintf(
                     'Значение поля "%s" не сходится: "%s" вместо "%s"',
                     $field,
-                    $this->processScalarValueToStrong($data[$field] ?? null),
+                    $this->processScalarValueToStrong($dataValue),
                     $value
                 )
             );
@@ -186,7 +189,9 @@ trait RequestResponseTrait
 
         foreach ($errors as $error) {
             if ($error['path'] === $field) {
-                if ($error['message'] !== $message) {
+                $fieldErrorMessage = str_replace('"', '', $error['message']);
+
+                if ($fieldErrorMessage !== $message) {
                     throw new RuntimeException(
                         sprintf(
                             'Сообщение ошибки поля "%s" не сходится: "%s" вместо "%s"',
@@ -259,5 +264,26 @@ trait RequestResponseTrait
         }
 
         return (string) $value;
+    }
+
+    private function receiveValueFromDataByField(string $field, array $data): mixed
+    {
+        if (str_contains($field, '.')) {
+            $fieldParts = explode('.', $field);
+
+            do {
+                $fieldPart = array_shift($fieldParts);
+
+                if (!array_key_exists($fieldPart, $data)) {
+                    return null;
+                }
+
+                $data = $data[$fieldPart];
+            } while (!empty($fieldParts));
+
+            return $data;
+        }
+
+        return array_key_exists($field, $data) ? $data[$field] : null;
     }
 }

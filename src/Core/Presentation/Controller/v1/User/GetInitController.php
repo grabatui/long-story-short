@@ -18,7 +18,8 @@ class GetInitController extends AbstractController
 
     #[Route(
         '/api/v1/user/init',
-        name: 'v1_user_init'
+        name: 'v1_user_init',
+        methods: ['GET']
     )]
     public function __invoke(): Response
     {

@@ -1,0 +1,41 @@
+[
+  {
+    "title": "Alone entity title",
+    "original_title": "Alone entity title",
+    "slug": "Alone-entity-title-1900",
+    "premiered_at": "1900-01-01",
+    "countries": "[\"RU\"]",
+    "genres": "[\"horror\"]",
+    "duration_in_minutes": 100,
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "poster_name": "some-poster-name.jpg",
+    "poster_size": 1000
+  },
+  {
+    "title": "First entity title",
+    "original_title": "First entity title",
+    "slug": "First-entity-title-1900",
+    "premiered_at": "1900-01-01",
+    "countries": "[\"RU\"]",
+    "genres": "[\"horror\"]",
+    "duration_in_minutes": 100,
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "poster_name": "some-poster-name.jpg",
+    "poster_size": 1000
+  },
+  {
+    "title": "Second entity title",
+    "original_title": "Second entity title",
+    "slug": "Second-entity-title-1900",
+    "premiered_at": "1900-01-01",
+    "countries": "[\"RU\"]",
+    "genres": "[\"horror\"]",
+    "duration_in_minutes": 100,
+    "created_at": "2020-01-01 00:00:00",
+    "updated_at": "2020-01-01 00:00:00",
+    "poster_name": "some-poster-name.jpg",
+    "poster_size": 1000
+  }
+]

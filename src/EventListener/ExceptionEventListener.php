@@ -86,8 +86,8 @@ class ExceptionEventListener
     {
         return trim(
             str_replace(
-                ['[request]', ']['],
-                ['', '.'],
+                ['[request]', '[query]', ']['],
+                ['', '', '.'],
                 $rawPath
             ),
             '[]'

@@ -20,7 +20,8 @@ class SearchController extends AbstractController
 
     #[Route(
         '/api/v1/entity/search',
-        name: 'v1_entity_search'
+        name: 'v1_entity_search',
+        methods: ['GET']
     )]
     public function __invoke(SearchRequest $request): Response
     {

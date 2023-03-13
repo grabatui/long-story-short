@@ -17,7 +17,8 @@ class ChangePasswordController extends AbstractController
 
     #[Route(
         '/api/v1/authorization/change_password',
-        name: 'v1_authorization_change_password'
+        name: 'v1_authorization_change_password',
+        methods: ['POST']
     )]
     public function __invoke(ChangePasswordRequest $request): Response
     {

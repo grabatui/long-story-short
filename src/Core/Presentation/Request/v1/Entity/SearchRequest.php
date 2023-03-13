@@ -11,7 +11,7 @@ class SearchRequest extends AbstractRequest
     protected function getValidationRules(): ?ValidationRules
     {
         return new ValidationRules([
-            'request' => [
+            'query' => [
                 'type' => [
                     'required',
                     'in:' . $this->getSearchTypes(),
@@ -23,12 +23,12 @@ class SearchRequest extends AbstractRequest
 
     public function getType(): string
     {
-        return $this->getRequest()->request->get('type');
+        return $this->getRequest()->query->get('type');
     }
 
     public function getTerm(): string
     {
-        return $this->getRequest()->request->get('term');
+        return $this->getRequest()->query->get('term');
     }
 
     private function getSearchTypes(): string

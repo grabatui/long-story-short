@@ -17,7 +17,8 @@ class SendResetPasswordController extends AbstractController
 
     #[Route(
         '/api/v1/authorization/restore_password',
-        name: 'v1_authorization_restore_password'
+        name: 'v1_authorization_restore_password',
+        methods: ['POST']
     )]
     public function __invoke(SendResetPasswordRequest $request): Response
     {

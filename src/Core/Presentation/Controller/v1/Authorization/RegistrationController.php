@@ -18,7 +18,8 @@ class RegistrationController extends AbstractController
 
     #[Route(
         '/api/v1/authorization/register',
-        name: 'v1_authorization_register'
+        name: 'v1_authorization_register',
+        methods: ['POST']
     )]
     public function __invoke(RegistrationRequest $request): Response
     {

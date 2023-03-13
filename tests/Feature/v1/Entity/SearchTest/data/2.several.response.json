@@ -1,0 +1,37 @@
+{
+  "took": 15,
+  "timed_out": false,
+  "_shards": {
+    "total": 2,
+    "successful": 2,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 2,
+      "relation": "eq"
+    },
+    "max_score": 2.0,
+    "hits": [
+      {
+        "_index": "movies",
+        "_id": "2",
+        "_score": 2.0,
+        "_source": {
+          "title": "First entity title",
+          "originalTitle": "First entity title"
+        }
+      },
+      {
+        "_index": "movies",
+        "_id": "3",
+        "_score": 2.0,
+        "_source": {
+          "title": "Second entity title",
+          "originalTitle": "Second entity title"
+        }
+      }
+    ]
+  }
+}

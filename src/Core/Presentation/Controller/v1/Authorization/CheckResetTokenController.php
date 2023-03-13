@@ -17,7 +17,8 @@ class CheckResetTokenController extends AbstractController
 
     #[Route(
         '/api/v1/authorization/check_reset_token',
-        name: 'v1_authorization_check_reset_token'
+        name: 'v1_authorization_check_reset_token',
+        methods: ['POST']
     )]
     public function __invoke(CheckResetTokenRequest $request): Response
     {

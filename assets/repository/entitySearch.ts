@@ -8,10 +8,9 @@ export const entitySearch = async (
     type: string,
     token?: AuthorizationDataInterface
 ): Promise<DefaultResponseResult<EntitiesInterface>> => {
-    return await fetch('/api/v1/entity/search', {
-        method: 'POST',
+    return await fetch(encodeURI(`/api/v1/entity/search?type=${type}&term=${term}`), {
+        method: 'GET',
         headers: makeDefaultApiHeaders(token?.token),
-        body: JSON.stringify({type, term}),
         mode: 'cors',
         signal: signal
     })

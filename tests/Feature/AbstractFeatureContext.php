@@ -76,6 +76,22 @@ abstract class AbstractFeatureContext implements Context
         );
     }
 
+    protected function getAndCheckDataFilePath(string $dataFilePath): string
+    {
+        $dataFilePath = implode('/', [
+            $this->getClassPath(),
+            trim($dataFilePath, '/')
+        ]);
+
+        if (!file_exists($dataFilePath)) {
+            throw new RuntimeException(
+                sprintf('Файл "%s" не найден', $dataFilePath)
+            );
+        }
+
+        return file_get_contents($dataFilePath);
+    }
+
     private static function makeKernel(): KernelInterface
     {
         $kernelClass = self::getKernelClass();

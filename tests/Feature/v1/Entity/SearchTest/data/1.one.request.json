@@ -1,0 +1,7 @@
+{
+  "query": {
+    "query_string": {
+      "query": "*Alone entity title* OR *Фдщту утешен ешеду*"
+    }
+  }
+}
