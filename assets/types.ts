@@ -3,7 +3,9 @@ import {modalType} from './actions/modalActions';
 
 export interface UserInterface {
     id: number|null,
-    type: 'unauthorized'|'authorized'
+    type: 'unauthorized'|'authorized',
+    email: string|null,
+    allows: 'create_entity_request'|'another'[]
 }
 
 export interface SearchTypeInterface {

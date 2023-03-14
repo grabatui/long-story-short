@@ -54,8 +54,8 @@ export const sendRestorePassword = async (
         .then((response) => response.json());
 };
 
-export const getUser = async (token: AuthorizationDataInterface): Promise<DefaultResponseResult<UserInterface>> => {
-    return await fetch('/api/v1/user/init', {headers: makeDefaultApiHeaders(token.token)})
+export const getUser = async (token?: AuthorizationDataInterface): Promise<DefaultResponseResult<UserInterface>> => {
+    return await fetch('/api/v1/user/init', {headers: makeDefaultApiHeaders(token?.token)})
         .then((response) => response.json())
         .then(
             (response: DefaultResponseResult<UserInterface>) => refreshTokenAndRedoAction(

@@ -4,6 +4,8 @@ namespace App\Core\Persistence\Entity;
 
 use App\Core\Persistence\Entity\Enum\UserRoleEnum;
 use App\Core\Persistence\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,11 +28,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string|null The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(
+        mappedBy: 'user',
+        targetEntity: MovieRequest::class,
+        cascade: ['all']
+    )]
+    private Collection $movieRequests;
+
+    public function __construct()
+    {
+        $this->movieRequests = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -106,6 +117,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getMovieRequests(): Collection
+    {
+        return $this->movieRequests;
+    }
+
+    public function setMovieRequests(Collection $movieRequests): void
+    {
+        $this->movieRequests = $movieRequests;
     }
 
     /**

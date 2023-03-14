@@ -3,8 +3,6 @@
 namespace App\Core\Persistence\Entity;
 
 use App\Core\Persistence\Repository\MovieRepository;
-use DateTime;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,7 +32,7 @@ class Movie
     private ?string $slug = null;
 
     #[ORM\Column(type: 'date', nullable: false)]
-    private ?DateTimeInterface $premieredAt = null;
+    private ?\DateTimeInterface $premieredAt = null;
 
     #[ORM\Column(nullable: false)]
     private array $countries = [];
@@ -46,7 +44,7 @@ class Movie
     private ?int $durationInMinutes = null;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?DateTimeInterface $deletedAt = null;
+    private ?\DateTimeInterface $deletedAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $posterName = null;
@@ -113,12 +111,12 @@ class Movie
         $this->slug = $slug;
     }
 
-    public function getPremieredAt(): ?DateTimeInterface
+    public function getPremieredAt(): ?\DateTimeInterface
     {
         return $this->premieredAt;
     }
 
-    public function setPremieredAt(?DateTimeInterface $premieredAt): void
+    public function setPremieredAt(?\DateTimeInterface $premieredAt): void
     {
         $this->premieredAt = $premieredAt;
     }
@@ -153,12 +151,12 @@ class Movie
         $this->durationInMinutes = $durationInMinutes;
     }
 
-    public function getDeletedAt(): ?DateTimeInterface
+    public function getDeletedAt(): ?\DateTimeInterface
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTimeInterface $deletedAt): void
+    public function setDeletedAt(?\DateTimeInterface $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
     }
@@ -198,7 +196,7 @@ class Movie
         $this->poster = $poster;
 
         if ($poster) {
-            $this->setUpdatedAt(new DateTime());
+            $this->setUpdatedAt(new \DateTime());
         }
     }
 

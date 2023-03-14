@@ -6,7 +6,6 @@ use App\Core\Persistence\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use JsonException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
-use RuntimeException;
 use Symfony\Component\DomCrawler\Crawler;
 
 trait RequestResponseTrait
@@ -38,12 +37,13 @@ trait RequestResponseTrait
 
     /**
      * @When мы авторизованы
+     *
      * @throws JWTEncodeFailureException
      */
     public function weAreAuthorized(): void
     {
         if (!$this->defaultUsername || !$this->defaultPassword) {
-            throw new RuntimeException('User is not exists');
+            throw new \RuntimeException('User is not exists');
         }
 
         $this->accessToken = $this->JWTEncoder->encode([
@@ -60,7 +60,7 @@ trait RequestResponseTrait
         try {
             $jsonData = json_decode($jsonData, true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException) {
-            throw new RuntimeException('Невалидный json в данных');
+            throw new \RuntimeException('Невалидный json в данных');
         }
 
         $this->weDoGetRequestToPath($path . '?' . http_build_query($jsonData));
@@ -95,13 +95,7 @@ trait RequestResponseTrait
     public function shouldBeReceivedStatus(int $status): void
     {
         if ($this->getClient()->getResponse()->getStatusCode() !== $status) {
-            throw new RuntimeException(
-                sprintf(
-                    'Ожидался статус %d, пришёл статус %d',
-                    $status,
-                    $this->getClient()->getResponse()->getStatusCode()
-                )
-            );
+            throw new \RuntimeException(sprintf('Ожидался статус %d, пришёл статус %d', $status, $this->getClient()->getResponse()->getStatusCode()));
         }
     }
 
@@ -110,14 +104,8 @@ trait RequestResponseTrait
      */
     public function shouldBeReceivedValidResponse(): void
     {
-        if ($this->getClient()->getResponse()->getStatusCode() !== 200) {
-            throw new RuntimeException(
-                sprintf(
-                    'Ошибка ответа %d: %s',
-                    $this->getClient()->getResponse()->getStatusCode(),
-                    $this->getClient()->getResponse()->getContent()
-                )
-            );
+        if (200 !== $this->getClient()->getResponse()->getStatusCode()) {
+            throw new \RuntimeException(sprintf('Ошибка ответа %d: %s', $this->getClient()->getResponse()->getStatusCode(), $this->getClient()->getResponse()->getContent()));
         }
     }
 
@@ -129,17 +117,11 @@ trait RequestResponseTrait
         $data = json_decode($this->getClient()->getResponse()->getContent(), true);
 
         if (!array_key_exists('message', $data)) {
-            throw new RuntimeException('Ответ имеет невалидный формат');
+            throw new \RuntimeException('Ответ имеет невалидный формат');
         }
 
         if ($message != $data['message']) {
-            throw new RuntimeException(
-                sprintf(
-                    'Сообщение не сходится: "%s" вместо "%s"',
-                    $data['message'],
-                    $message
-                )
-            );
+            throw new \RuntimeException(sprintf('Сообщение не сходится: "%s" вместо "%s"', $data['message'], $message));
         }
     }
 
@@ -151,7 +133,7 @@ trait RequestResponseTrait
         $data = json_decode($this->getClient()->getResponse()->getContent(), true);
 
         if (!array_key_exists('data', $data)) {
-            throw new RuntimeException('Ответ имеет невалидный формат');
+            throw new \RuntimeException('Ответ имеет невалидный формат');
         }
 
         $data = $data['data'];
@@ -159,14 +141,7 @@ trait RequestResponseTrait
         $dataValue = $this->receiveValueFromDataByField($field, $data);
 
         if ($dataValue != $this->processScalarValueFromString($value)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Значение поля "%s" не сходится: "%s" вместо "%s"',
-                    $field,
-                    $this->processScalarValueToStrong($dataValue),
-                    $value
-                )
-            );
+            throw new \RuntimeException(sprintf('Значение поля "%s" не сходится: "%s" вместо "%s"', $field, $this->processScalarValueToStrong($dataValue), $value));
         }
     }
 
@@ -178,13 +153,13 @@ trait RequestResponseTrait
         $data = json_decode($this->getClient()->getResponse()->getContent(), true);
 
         if (!array_key_exists('errors', $data)) {
-            throw new RuntimeException('Ответ имеет невалидный формат');
+            throw new \RuntimeException('Ответ имеет невалидный формат');
         }
 
         $errors = $data['errors'];
 
         if (empty($errors)) {
-            throw new RuntimeException('Ответ имеет невалидный формат');
+            throw new \RuntimeException('Ответ имеет невалидный формат');
         }
 
         foreach ($errors as $error) {
@@ -192,23 +167,14 @@ trait RequestResponseTrait
                 $fieldErrorMessage = str_replace('"', '', $error['message']);
 
                 if ($fieldErrorMessage !== $message) {
-                    throw new RuntimeException(
-                        sprintf(
-                            'Сообщение ошибки поля "%s" не сходится: "%s" вместо "%s"',
-                            $field,
-                            $error['message'],
-                            $message
-                        )
-                    );
+                    throw new \RuntimeException(sprintf('Сообщение ошибки поля "%s" не сходится: "%s" вместо "%s"', $field, $error['message'], $message));
                 }
 
                 return;
             }
         }
 
-        throw new RuntimeException(
-            sprintf('Ошибка "%s" не найдена', $field)
-        );
+        throw new \RuntimeException(sprintf('Ошибка "%s" не найдена', $field));
     }
 
     protected function getEntityManager(): ManagerRegistry

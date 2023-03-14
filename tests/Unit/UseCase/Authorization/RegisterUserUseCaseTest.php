@@ -45,7 +45,7 @@ class RegisterUserUseCaseTest extends TestCase
 
         $useCase->run($newUser);
     }
-    
+
     private function makeNewUser(string $password, bool $getPasswordCallExpected = true): NewUser
     {
         $mock = $this->createMock(NewUser::class);
@@ -53,7 +53,7 @@ class RegisterUserUseCaseTest extends TestCase
             ->expects($getPasswordCallExpected ? self::once() : self::never())
             ->method('getPassword')
             ->willReturn($password);
-        
+
         return $mock;
     }
 

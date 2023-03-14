@@ -8,6 +8,8 @@ const initialState: StoreStateInterface = {
     user: {
         id: null,
         type: 'unauthorized',
+        email: null,
+        allows: []
     },
     shownModal: null,
     initData: null

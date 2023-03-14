@@ -18,7 +18,6 @@ interface Properties extends StoreStateInterface {
     showModal(type: modalType): void;
     logout(): void;
     storeUserToken(token: AuthorizationDataInterface|null): void;
-    loadUser(): void;
 }
 interface State {
     isMainMenuOpen: boolean,

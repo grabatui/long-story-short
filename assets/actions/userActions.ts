@@ -34,10 +34,6 @@ export const userActions = (store: Store<StoreStateInterface>): userActionsType 
         store.setState({token: token});
     },
     async loadUser(state: StoreStateInterface): Promise<any> {
-        if (!state.token) {
-            return;
-        }
-
         await getUser(state.token).then(
             (response: DefaultResponseResult<UserInterface>) => store.setState({user: response.data})
         );
@@ -48,6 +44,8 @@ export const userActions = (store: Store<StoreStateInterface>): userActionsType 
                 user: {
                     id: null,
                     type: 'unauthorized',
+                    email: null,
+                    allows: []
                 },
             })
         );
